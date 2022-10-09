@@ -10,7 +10,7 @@
         set number
 
         setlocal foldmethod=marker
-     '';
+      '';
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           nerdtree
@@ -18,11 +18,12 @@
           indentLine
 
           rainbow
-	        lightline-vim
-	        syntastic
+          lightline-vim
+          syntastic
           vim-nix
           ale
           vim-polyglot
+          vim-autoformat
 
           vim-markdown
           markdown-preview-nvim
