@@ -2,7 +2,7 @@
 {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
+
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
     # CLI tools
@@ -52,7 +52,7 @@
     libreoffice
     joplin-desktop
 
-  
+
     feh # image viewer
     evince # pdf viewer
   ];

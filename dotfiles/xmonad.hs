@@ -1,8 +1,7 @@
 -- TODOs
 ---------------------------------------------------------------------{{{
--- [ ] - make swallowing work
+-- [x] - make swallowing work
 -- [ ] - add more and better layouts
--- [ ] - workspace swaping/dynamic workspaces: https://xmonad.github.io/xmonad-docs/xmonad-contrib/XMonad-Actions-WorkspaceNames.html
 -- [ ] - tree menu for actions
 -- [x] - gridselect for applications
 ---------------------------------------------------------------------}}}
@@ -15,6 +14,7 @@ import System.Exit
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
+import XMonad.Util.Cursor
 import XMonad.Config
 
 import XMonad.Actions.DynamicProjects
@@ -25,17 +25,22 @@ import qualified XMonad.Actions.TreeSelect as TS
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.WindowSwallowing
+import XMonad.Hooks.SetWMName
 
 import XMonad.Layout.SubLayouts
+import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
 import XMonad.Layout.Grid (Grid(..))
+import XMonad.Layout.Spiral
+import qualified XMonad.Layout.BoringWindows as BW
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import Data.Tree
+
 ---------------------------------------------------------------------}}}
 
 -- constants & settings
@@ -45,6 +50,14 @@ myBrowser = "firefox"
 myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobarrc"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
+
+color_base1   = 0x133b45
+color_base2   = 0x1e5c6c
+color_base3   = 0x297f94
+color_active  = 0x268bd2
+color_backg   = 0x1b2b34
+color_foreg   = color_active
+
 
 myApplications :: [(String, String, String)]
 myApplications = [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
@@ -139,14 +152,13 @@ myAppGrid = [ ("Alacritty", "alacritty")
 
 spawnSelected' :: [(String, String)] -> X ()
 spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
-  where conf = def
-        { gs_cellheight   = 40
-        , gs_cellwidth    = 200
-        , gs_cellpadding  = 6
-        , gs_originFractX = 0.5
-        , gs_originFractY = 0.5
-        , gs_font         = myFont
-        }
+  where conf = def { gs_cellheight = 40
+                   , gs_cellwidth = 200
+                   , gs_cellpadding = 6
+                   , gs_originFractX = 0.5
+                   , gs_originFractY = 0.5
+                   , gs_font = myFont
+                   }
 ---------------------------------------------------------------------}}}
 
 -- treeselect stuff
@@ -155,43 +167,43 @@ treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
    [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "shutdown 0"))
            [ Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "reboot")) []
-           , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
-           , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
+             , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
+             , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
            ]
-   , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []
-   , Node (TS.TSNode "Applications" "" (return ())) []
+             , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []
+             , Node (TS.TSNode "Applications" "" (return ())) []
    ]
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
-                              , TS.ts_background   = 0xdd292d3e
-                              , TS.ts_font         = myFont
-                              , TS.ts_node         = (0xffd0d0d1, 0xff202331)
-                              , TS.ts_nodealt      = (0xffd0d0d0, 0xff292d3e)
-                              , TS.ts_highlight    = (0xffffffff, 0xff755999)
-                              , TS.ts_extra        = 0xffd0d0d0
-                              , TS.ts_node_width   = 200
-                              , TS.ts_node_height  = 30
-                              , TS.ts_originX      = 20
-                              , TS.ts_originY      = 20
-                              , TS.ts_indent       = 80
-                              , TS.ts_navigate     = myTreeNavigation
+  , TS.ts_background   = 0xdd000000 + color_backg
+  , TS.ts_font         = myFont
+  , TS.ts_node         = (0xFF000000 + color_base3, 0xFF000000+color_base2)
+  , TS.ts_nodealt      = (0xFF000000 + color_base3, 0xFF000000+color_base1)
+  , TS.ts_highlight    = (0xffffffff, 0xFF000000+color_active)
+  , TS.ts_extra        = 0xffd0d0d0
+  , TS.ts_node_width   = 200
+  , TS.ts_node_height  = 30
+  , TS.ts_originX      = 20
+  , TS.ts_originY      = 20
+  , TS.ts_indent       = 80
+  , TS.ts_navigate     = myTreeNavigation
                               }
 
 
 myTreeNavigation = M.fromList
     [ ((0, xK_Escape), TS.cancel)
-    , ((0, xK_Return), TS.select)
-    , ((0, xK_space),  TS.select)
-    , ((0, xK_Up),     TS.movePrev)
-    , ((0, xK_Down),   TS.moveNext)
-    , ((0, xK_Left),   TS.moveParent)
-    , ((0, xK_Right),  TS.moveChild)
-    , ((0, xK_k),      TS.movePrev)
-    , ((0, xK_j),      TS.moveNext)
-    , ((0, xK_h),      TS.moveParent)
-    , ((0, xK_l),      TS.moveChild)
-    , ((0, xK_o),      TS.moveHistBack)
-    , ((0, xK_i),      TS.moveHistForward)
+      , ((0, xK_Return), TS.select)
+      , ((0, xK_space),  TS.select)
+      , ((0, xK_Up),     TS.movePrev)
+      , ((0, xK_Down),   TS.moveNext)
+      , ((0, xK_Left),   TS.moveParent)
+      , ((0, xK_Right),  TS.moveChild)
+      , ((0, xK_k),      TS.movePrev)
+      , ((0, xK_j),      TS.moveNext)
+      , ((0, xK_h),      TS.moveParent)
+      , ((0, xK_l),      TS.moveChild)
+      , ((0, xK_o),      TS.moveHistBack)
+      , ((0, xK_i),      TS.moveHistForward)
     ]
 ---------------------------------------------------------------------}}}
 
@@ -199,17 +211,31 @@ myTreeNavigation = M.fromList
 
 -- my layouts
 ---------------------------------------------------------------------{{{
-myLayout = avoidStruts $ windowNavigation $ subTabbed $
+myLayout = avoidStruts $ windowNavigation $ subLayout [0] (tabbedLayout) $ (BW.boringWindows) $
   -- with spacing
-     spacingWithEdge 5 (
-       tall
-       ||| Grid
-                       )
+     spacingWithEdge 5
+     (
+       tall ||| grid ||| spiralLayout
+     )
      -- without spacing
      ||| full
    where
+     grid = Grid
+     tabbedLayout = tabbed shrinkText myTabConfig
      full = (noBorders Full)
-    tall = Tall 1 (3/100) (1/2)
+     tall = Tall 1 (3/100) (1/2)
+     spiralLayout = spiral (6/7)
+
+
+myTabConfig = def { activeBorderColor = "#297f94"
+                  , inactiveBorderColor = "#133b45"
+                  
+                  , activeTextColor = "#00FF00"
+                  , inactiveTextColor = "#dddddd"
+
+                  , activeColor = "#133b45"
+                  , inactiveColor = "#297f94"
+                  }
 
 ---------------------------------------------------------------------}}}
 
@@ -229,9 +255,11 @@ myLogHook h = do
 
 -- startup hook
 myStartupHook = do
-  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off"
-  spawn "setxkbmap -layout de"
-  spawnOnce "nitrogen --restore &"
+  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off" 
+  setDefaultCursor xC_left_ptr            -- 
+  setWMName "LG3D"                        -- for java applications work
+  spawn "setxkbmap -layout de"            -- keyboard layout
+  spawnOnce "nitrogen --restore &"        -- background
 
 -- manage hook
 myManageHook = composeAll
@@ -253,35 +281,35 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_space ), sendMessage NextLayout)   -- cycle layouts
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) -- reset to default layout
 
-    , ((modm,               xK_Tab   ), windows W.focusDown)    -- next window/cycle
-    , ((modm,               xK_j     ), windows W.focusDown)    -- next window
-    , ((modm,               xK_k     ), windows W.focusUp  )    -- previrous window
+    , ((modm,               xK_Tab   ), BW.focusDown)    -- next window/cycle
+    , ((modm,               xK_j     ), BW.focusUp)    -- next window
+    , ((modm,               xK_k     ), BW.focusDown)    -- previrous window
 
     , ((modm,               xK_m     ), windows W.focusMaster)    -- return focus back to master
     , ((modm,               xK_Return), windows W.swapMaster)   -- swap focused and master window
 
     -- sublayout test
-    , ((modm .|. controlMask, xK_h), sendMessage $ pullGroup L)
-    , ((modm .|. controlMask, xK_l), sendMessage $ pullGroup R)
-    , ((modm .|. controlMask, xK_k), sendMessage $ pullGroup U)
-    , ((modm .|. controlMask, xK_j), sendMessage $ pullGroup D)
+      , ((modm .|. controlMask, xK_h), sendMessage $ pullGroup L)
+      , ((modm .|. controlMask, xK_l), sendMessage $ pullGroup R)
+      , ((modm .|. controlMask, xK_k), sendMessage $ pullGroup U)
+      , ((modm .|. controlMask, xK_j), sendMessage $ pullGroup D)
 
-    , ((modm .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
-    , ((modm .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
+      , ((modm .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
+      , ((modm .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
 
-    , ((modm .|. controlMask, xK_period), onGroup W.focusUp')
-    , ((modm .|. controlMask, xK_comma), onGroup W.focusDown')
-
+      , ((modm .|. shiftMask, xK_Tab), onGroup W.focusDown')
+      , ((modm .|. shiftMask, xK_j), onGroup W.focusUp')
+      , ((modm .|. shiftMask, xK_k), onGroup W.focusDown')
     -- gridselect
-    , ((modm, xK_s), spawnSelected' myAppGrid)
+      , ((modm, xK_s), spawnSelected' myAppGrid)
 
     -- treeselect
-    , ((modm,               xK_a     ), treeselectAction tsDefaultConfig)
+      , ((modm,               xK_a     ), treeselectAction tsDefaultConfig)
 
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink) -- push window back into tiling
-    , ((modm              , xK_b     ), sendMessage ToggleStruts) -- toggle top bar spacing
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))  -- quit xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart") -- restart xmonad
+      , ((modm,               xK_t     ), withFocused $ windows . W.sink) -- push window back into tiling
+      , ((modm              , xK_b     ), sendMessage ToggleStruts) -- toggle top bar spacing
+      , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))  -- quit xmonad
+      , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart") -- restart xmonad
   ]
     ++
 

@@ -26,7 +26,6 @@
     nitrogen    # background
     xmobar      # task bar
     pstree      # so window swallowing works for xmonad
-    lxappearance# visual stuff
   ];
 
 

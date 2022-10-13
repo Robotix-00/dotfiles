@@ -30,7 +30,6 @@
 
         modules = [
           configurationNix
-        
           home-manager.nixosModules.home-manager {
             home-manager.users.bruno = {
               imports = [ ./users/bruno/home.nix ];

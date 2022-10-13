@@ -1,19 +1,16 @@
 Config {
 	font = "xft:Fira Code:size=10:bold:antialias=true",
         
-	bgColor = "#071a19",
-        fgColor = "#586e75",
-        position = TopW L 100,
+	bgColor = "#133b45",
+  fgColor = "#297f94",
+  position = TopW L 100,
  
- 	borderColor = "#586e75",
-        border = BottomB,
-               
 	commands = [
 	  Run Weather "EDDC" ["--template", "<fc=#4682B4><tempC></fc>°C | <fc=#4682B4><pressure></fc>hPa"] 36000,
           Run DynNetwork [
 	  	"--template" , "<dev>: <rx>kB/s|<tx>kB/s"
                 , "--Low"      , "10000"       -- units: B/s
-                , "--High"     , "50000"       -- units: B/s
+                , "--High"     , "200000"       -- units: B/s
                 , "--low"      , "darkgreen"
                 , "--normal"   , "darkorange"
                 , "--high"     , "darkred"
