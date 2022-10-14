@@ -32,6 +32,5 @@
   services.picom = {
     enable = true;
     fade = true;
-    shadow = true;
   };
 }

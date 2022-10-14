@@ -1,7 +1,7 @@
 Config {
 	font = "xft:Fira Code:size=10:bold:antialias=true",
         
-	bgColor = "#133b45",
+	bgColor = "#002b36",
   fgColor = "#297f94",
   position = TopW L 100,
  

@@ -2,45 +2,52 @@
 ---------------------------------------------------------------------{{{
 -- [x] - make swallowing work
 -- [ ] - add more and better layouts
--- [ ] - tree menu for actions
 -- [x] - gridselect for applications
+-- [ ] - get directional navigation to work using zip
 ---------------------------------------------------------------------}}}
 
 -- modules
 ---------------------------------------------------------------------{{{
-import XMonad
 import Data.Monoid
+import Data.Tree
 import System.Exit
-
-import XMonad.Util.SpawnOnce
-import XMonad.Util.Run
-import XMonad.Util.Cursor
-import XMonad.Config
+import XMonad
 
 import XMonad.Actions.DynamicProjects
-import XMonad.Actions.SpawnOn
 import XMonad.Actions.GridSelect
-import qualified XMonad.Actions.TreeSelect as TS
+import XMonad.Actions.SpawnOn
+
+import XMonad.Config
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.SetWMName
+import XMonad.Hooks.WindowSwallowing
 
+import XMonad.Layout.Accordion
+import XMonad.Layout.Circle
+import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
+import XMonad.Layout.Grid (Grid(..))
+import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.NoFrillsDecoration(noFrillsDeco)
+import XMonad.Layout.Renamed
+import XMonad.Layout.Simplest
+import XMonad.Layout.Spacing
+import XMonad.Layout.Spiral
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
-import XMonad.Layout.Spacing
-import XMonad.Layout.NoBorders (noBorders, smartBorders)
-import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
-import XMonad.Layout.Grid (Grid(..))
-import XMonad.Layout.Spiral
-import qualified XMonad.Layout.BoringWindows as BW
 
-import qualified XMonad.StackSet as W
+import XMonad.Util.Cursor
+import XMonad.Util.EZConfig(mkNamedKeymap)
+import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, showKm, addName, addDescrKeys, subtitle)
+import XMonad.Util.Run
+import XMonad.Util.SpawnOnce
+
 import qualified Data.Map        as M
-import Data.Tree
-
+import qualified XMonad.Actions.TreeSelect as TS
+import qualified XMonad.Layout.BoringWindows as BW
+import qualified XMonad.StackSet as W
 ---------------------------------------------------------------------}}}
 
 -- constants & settings
@@ -50,13 +57,6 @@ myBrowser = "firefox"
 myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobarrc"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
-
-color_base1   = 0x133b45
-color_base2   = 0x1e5c6c
-color_base3   = 0x297f94
-color_active  = 0x268bd2
-color_backg   = 0x1b2b34
-color_foreg   = color_active
 
 
 myApplications :: [(String, String, String)]
@@ -77,6 +77,7 @@ main = do
   xmonad
     $ docks
     $ dynamicProjects projects
+    $ addDescrKeys ((mod4Mask, xK_F1), xMessage) myKeys'
     $ myConfig xmproc
 
 -- config
@@ -85,11 +86,9 @@ myConfig p = def {
         terminal           = myTerminal,
         focusFollowsMouse  = False,
         clickJustFocuses   = True,
-        borderWidth        = 1,
+        borderWidth        = 0,
         modMask            = mod4Mask,
         workspaces         = myWorkspaces,
-        normalBorderColor  = "#000000",
-        focusedBorderColor = "#268bd2",
 
       -- key bindings
         keys               = myKeys,
@@ -102,6 +101,41 @@ myConfig p = def {
         logHook            = myLogHook p,
         startupHook        = myStartupHook
                  }
+
+---------------------------------------------------------------------}}}
+
+-- themes
+---------------------------------------------------------------------{{{
+color_base1   = "#133b45"
+color_base2   = "#1e5c6c"
+color_base3   = "#297f94"
+color_active  = "#268bd2"
+color_backg   = "#1b2b34"
+color_foreg   = color_active
+
+topbar        = 10
+
+
+myTabConfig = def { activeBorderColor = color_base3
+  , inactiveBorderColor = color_base1
+
+  , activeColor = color_base1
+  , inactiveColor = color_base3
+                  }
+
+topBarTheme = def
+  { fontName              = myFont
+    , inactiveBorderColor   = color_base3
+    , inactiveColor         = color_base3
+    , inactiveTextColor     = color_base3
+    , activeBorderColor     = color_active
+    , activeColor           = color_active
+    , activeTextColor       = color_active
+    , urgentBorderColor     = "#FF0000"
+    , urgentTextColor       = "#FFFF00"
+    , decoHeight            = topbar
+  }
+
 
 ---------------------------------------------------------------------}}}
 
@@ -143,21 +177,21 @@ projects = [ Project { projectName  = wsGEN
 ---------------------------------------------------------------------{{{
 myAppGrid :: [(String, String)]
 myAppGrid = [ ("Alacritty", "alacritty")
-            , ("Firefox", "firefox")
-            , ("ThunderBird", "thunderbird")
-            , ("Spotify", "spotify")
-            , ("Discord", "discord")
-            , ("LibreOffice", "libreoffice")
+  , ("Firefox", "firefox")
+  , ("ThunderBird", "thunderbird")
+  , ("Spotify", "spotify")
+  , ("Discord", "discord")
+  , ("LibreOffice", "libreoffice")
             ]
 
 spawnSelected' :: [(String, String)] -> X ()
 spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
   where conf = def { gs_cellheight = 40
-                   , gs_cellwidth = 200
-                   , gs_cellpadding = 6
-                   , gs_originFractX = 0.5
-                   , gs_originFractY = 0.5
-                   , gs_font = myFont
+    , gs_cellwidth = 200
+    , gs_cellpadding = 6
+    , gs_originFractX = 0.5
+    , gs_originFractY = 0.5
+    , gs_font = myFont
                    }
 ---------------------------------------------------------------------}}}
 
@@ -175,11 +209,11 @@ treeselectAction a = TS.treeselectAction a
    ]
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
-  , TS.ts_background   = 0xdd000000 + color_backg
+  , TS.ts_background   = 0xdd1b2b34
   , TS.ts_font         = myFont
-  , TS.ts_node         = (0xFF000000 + color_base3, 0xFF000000+color_base2)
-  , TS.ts_nodealt      = (0xFF000000 + color_base3, 0xFF000000+color_base1)
-  , TS.ts_highlight    = (0xffffffff, 0xFF000000+color_active)
+  , TS.ts_node         = (0xFF237f94, 0xFF1e5c6c)
+  , TS.ts_nodealt      = (0xFF237f94, 0xFF133b45)
+  , TS.ts_highlight    = (0xffffffff, 0xFF268bd2)
   , TS.ts_extra        = 0xffd0d0d0
   , TS.ts_node_width   = 200
   , TS.ts_node_height  = 30
@@ -211,31 +245,38 @@ myTreeNavigation = M.fromList
 
 -- my layouts
 ---------------------------------------------------------------------{{{
-myLayout = avoidStruts $ windowNavigation $ subLayout [0] (tabbedLayout) $ (BW.boringWindows) $
-  -- with spacing
-     spacingWithEdge 5
-     (
-       tall ||| grid ||| spiralLayout
-     )
-     -- without spacing
-     ||| full
-   where
-     grid = Grid
-     tabbedLayout = tabbed shrinkText myTabConfig
-     full = (noBorders Full)
-     tall = Tall 1 (3/100) (1/2)
-     spiralLayout = spiral (6/7)
+myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
+  tall ||| spiralLayout ||| circle ||| full
+    where
+     named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
 
+     addTopBar      = noFrillsDeco shrinkText topBarTheme
 
-myTabConfig = def { activeBorderColor = "#297f94"
-                  , inactiveBorderColor = "#133b45"
-                  
-                  , activeTextColor = "#00FF00"
-                  , inactiveTextColor = "#dddddd"
+     mySpacing      = spacing 5
+     tabbs          = addTabs shrinkText myTabConfig
+     sublayouts     = subLayout [] (Simplest ||| Accordion)
 
-                  , activeColor = "#133b45"
-                  , inactiveColor = "#297f94"
-                  }
+    -- Layouts
+
+     tall = named "Tall" $
+       addTopBar $
+         tabbs $ sublayouts $
+           mySpacing $
+             Tall 1 (3/100) (1/2)
+
+     full = named "Full" $
+       Full
+
+     spiralLayout = named "Spiral" $
+       addTopBar $
+         mySpacing $
+           spiral (6/7)
+
+     circle = named "Circle" $
+       addTopBar $
+         mySpacing $
+           Circle
+
 
 ---------------------------------------------------------------------}}}
 
@@ -255,8 +296,8 @@ myLogHook h = do
 
 -- startup hook
 myStartupHook = do
-  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off" 
-  setDefaultCursor xC_left_ptr            -- 
+  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off"
+  spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
   spawnOnce "nitrogen --restore &"        -- background
@@ -272,44 +313,59 @@ myManageHook = composeAll
 
 -- Key bindings
 ---------------------------------------------------------------------{{{
+myKeys' conf = let
+  dirKeys   = ["j", "k", "h", "l"]
+  arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
+  dirs      = [ D, U, L, R ]
+
+  subKeys str ks = subtitle str : mkNamedKeymap conf ks
+  zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
+  zipM' m nm ks as f b = zipWith (\k d -> (m ++ k, addName nm $ f d b)) ks as
+  
+  in
+  subKeys "System"
+  [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
+  , ("M-S-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
+  , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
+  , ("M-C-<Space>"    , addName "switch sublayout"    $ toSubl NextLayout)
+  , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
+  ] ^++^
+
+
+  subKeys "Actions"
+  [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
+  , ("M-S-f"          , addName "spawns browser"      $ spawn myBrowser)
+  , ("M-<Backspace>"  , addName "kill selected window"$ kill)
+  ] ^++^
+
+  subKeys "Navigation"
+  [ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
+  , ("M-j"            , addName "next window"         $ BW.focusDown)
+  , ("M-k"            , addName "prev. window"        $ BW.focusUp)
+  , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
+  , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+  , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
+  , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
+  ] ^++^
+
+  subKeys "Sub Layouts"
+  ([ ("M-C-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
+   , ("M-C-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
+  ]
+   -- ++ zipM "M-C-s ", "Pull into Group",              dirKeys dirs (sendMessage . pullGroup)
+  ) ^++^
+
+  subKeys "Launcher"
+  [ ("M-a t"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
+  , ("M-a g"          , addName "launch grid select"  $ spawnSelected' myAppGrid)
+  ]
+
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-  [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- launch terminal
-    , ((modm,       xK_f     ), spawn myBrowser)    -- spawn firefox
-    , ((modm,               xK_p     ), spawn myMenu)   -- launch dmenu
-    , ((modm,       xK_BackSpace), kill)      -- kill selected window
-
-    , ((modm,               xK_space ), sendMessage NextLayout)   -- cycle layouts
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf) -- reset to default layout
-
-    , ((modm,               xK_Tab   ), BW.focusDown)    -- next window/cycle
-    , ((modm,               xK_j     ), BW.focusUp)    -- next window
-    , ((modm,               xK_k     ), BW.focusDown)    -- previrous window
-
-    , ((modm,               xK_m     ), windows W.focusMaster)    -- return focus back to master
-    , ((modm,               xK_Return), windows W.swapMaster)   -- swap focused and master window
-
-    -- sublayout test
-      , ((modm .|. controlMask, xK_h), sendMessage $ pullGroup L)
-      , ((modm .|. controlMask, xK_l), sendMessage $ pullGroup R)
-      , ((modm .|. controlMask, xK_k), sendMessage $ pullGroup U)
-      , ((modm .|. controlMask, xK_j), sendMessage $ pullGroup D)
-
-      , ((modm .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
-      , ((modm .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
-
-      , ((modm .|. shiftMask, xK_Tab), onGroup W.focusDown')
-      , ((modm .|. shiftMask, xK_j), onGroup W.focusUp')
-      , ((modm .|. shiftMask, xK_k), onGroup W.focusDown')
-    -- gridselect
-      , ((modm, xK_s), spawnSelected' myAppGrid)
-
-    -- treeselect
-      , ((modm,               xK_a     ), treeselectAction tsDefaultConfig)
-
-      , ((modm,               xK_t     ), withFocused $ windows . W.sink) -- push window back into tiling
-      , ((modm              , xK_b     ), sendMessage ToggleStruts) -- toggle top bar spacing
-      , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))  -- quit xmonad
-      , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart") -- restart xmonad
+  [    -- sublayout test
+    ((modm .|. controlMask, xK_h), sendMessage $ pullGroup L)
+  , ((modm .|. controlMask, xK_l), sendMessage $ pullGroup R)
+  , ((modm .|. controlMask, xK_k), sendMessage $ pullGroup U)
+  , ((modm .|. controlMask, xK_j), sendMessage $ pullGroup D)
   ]
     ++
 
@@ -319,7 +375,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --
     [((m .|. modm, k), windows $ f i)
       | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+    , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
     --
@@ -328,7 +384,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
       | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
 ------------------------------------------------------------------------
@@ -337,8 +393,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
+  , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+  , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
   ]
 
