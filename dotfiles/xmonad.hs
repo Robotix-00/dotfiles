@@ -14,6 +14,7 @@ import System.Exit
 import XMonad
 
 import XMonad.Actions.DynamicProjects
+import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SpawnOn
 
@@ -40,7 +41,7 @@ import XMonad.Layout.WindowNavigation
 
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig(mkNamedKeymap)
-import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, showKm, addName, addDescrKeys, subtitle)
+import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, showKm, addName, noName, addDescrKeys', subtitle)
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
@@ -77,7 +78,7 @@ main = do
   xmonad
     $ docks
     $ dynamicProjects projects
-    $ addDescrKeys ((mod4Mask, xK_F1), xMessage) myKeys'
+    $ addDescrKeys' ((mod4Mask, xK_F1), xMessage) myKeys'   -- TODO use addDescrKeys' -> fix ezconfig bindings | use different displayer
     $ myConfig xmproc
 
 -- config
@@ -91,7 +92,6 @@ myConfig p = def {
         workspaces         = myWorkspaces,
 
       -- key bindings
-        keys               = myKeys,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
@@ -246,8 +246,8 @@ myTreeNavigation = M.fromList
 -- my layouts
 ---------------------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
-  tall ||| spiralLayout ||| circle ||| full
-    where
+  (tall ||| spiralLayout ||| circle ||| full)
+  where
      named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
 
      addTopBar      = noFrillsDeco shrinkText topBarTheme
@@ -269,8 +269,9 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
 
      spiralLayout = named "Spiral" $
        addTopBar $
-         mySpacing $
-           spiral (6/7)
+         tabbs $ sublayouts $
+           mySpacing $
+             spiral (6/7)
 
      circle = named "Circle" $
        addTopBar $
@@ -313,79 +314,78 @@ myManageHook = composeAll
 
 -- Key bindings
 ---------------------------------------------------------------------{{{
+-- TODO
+-- [ ] - Add directional window swaping, moving, merging
+-- [ ] - Add resize
+
 myKeys' conf = let
   dirKeys   = ["j", "k", "h", "l"]
   arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
   dirs      = [ D, U, L, R ]
 
+  screenKeys    = ["w", "e", "r"]
+  wsKeys        = map show $ [1..9] ++ [0]
+  modm          = mod4Mask
+
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
-  zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
-  zipM' m nm ks as f b = zipWith (\k d -> (m ++ k, addName nm $ f d b)) ks as
-  
-  in
+
+  zipM  m nm ks as f = (zipWith(\k v -> (m++k, addName nm $ f v)) ks as)
+  zipDir m nm f = (zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f)
+
+                in
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
-  , ("M-S-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
-  , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
-  , ("M-C-<Space>"    , addName "switch sublayout"    $ toSubl NextLayout)
-  , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
+    , ("M-S-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
+    , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
+    , ("M-C-<Space>"    , addName "switch sublayout"    $ toSubl NextLayout)
+    , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
   ] ^++^
 
 
   subKeys "Actions"
   [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
-  , ("M-S-f"          , addName "spawns browser"      $ spawn myBrowser)
-  , ("M-<Backspace>"  , addName "kill selected window"$ kill)
+    , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
+    , ("M-S-f"          , addName "spawns browser with nopersonal profile" $ spawn "firefox --profile .mozilla/firefox/v10tpbwa.NoPersonal")
+    , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
   subKeys "Navigation"
   [ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
-  , ("M-j"            , addName "next window"         $ BW.focusDown)
-  , ("M-k"            , addName "prev. window"        $ BW.focusUp)
-  , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-  , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
-  , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
-  , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
+    , ("M-j"            , addName "next window"         $ BW.focusDown)
+    , ("M-k"            , addName "prev. window"        $ BW.focusUp)
+    , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
+    , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
+    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
   ] ^++^
 
   subKeys "Sub Layouts"
-  ([ ("M-C-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
-   , ("M-C-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
-  ]
-   -- ++ zipM "M-C-s ", "Pull into Group",              dirKeys dirs (sendMessage . pullGroup)
+  ([ ("M-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
+    , ("M-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
+    , ("M-."         , addName "Focus up in sublayout"   $ onGroup W.focusUp')
+    , ("M-,"         , addName "Focus down in sublayout" $ onGroup W.focusDown')
+   ]
+    ++ zipDir   "M-s "     "Merge w/sublayout"          (sendMessage . pullGroup)
+    ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
+
+    -- ++ zipDir   "M-"         "navigate windows"           (windowGo)
+    ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
+    ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]
   ) ^++^
 
   subKeys "Launcher"
   [ ("M-a t"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
-  , ("M-a g"          , addName "launch grid select"  $ spawnSelected' myAppGrid)
+    , ("M-a g"          , addName "launch grid select"  $ spawnSelected' myAppGrid)
   ]
 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-  [    -- sublayout test
-    ((modm .|. controlMask, xK_h), sendMessage $ pullGroup L)
-  , ((modm .|. controlMask, xK_l), sendMessage $ pullGroup R)
-  , ((modm .|. controlMask, xK_k), sendMessage $ pullGroup U)
-  , ((modm .|. controlMask, xK_j), sendMessage $ pullGroup D)
-  ]
-    ++
-
-    --
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
-    --
-    [((m .|. modm, k), windows $ f i)
-      | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-    , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-
-    --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    --
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-
+  --subKeys "Utility"
+  --  ----
+  --  ---- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+  --  ---- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+  --  ----
+  --  [((m .|. modm, key), noName $ screenWorkspace sc >>= flip whenJust (windows . f))
+  --    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+  --  , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 ------------------------------------------------------------------------
   -- Mouse bindings: default actions bound to mouse events
@@ -393,8 +393,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
-  , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-  , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
+    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
   ]
 
