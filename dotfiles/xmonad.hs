@@ -1,9 +1,11 @@
 -- TODOs
 ---------------------------------------------------------------------{{{
 -- [x] - make swallowing work
--- [ ] - add more and better layouts
+-- [~] - add more and better layouts
 -- [x] - gridselect for applications
--- [ ] - get directional navigation to work using zip
+-- [x] - get directional navigation to work using zip
+-- [ ] - add usefull scratchpads
+-- [ ] - add colorizer to gridselect
 ---------------------------------------------------------------------}}}
 
 -- modules
@@ -17,15 +19,17 @@ import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SpawnOn
+import XMonad.Actions.Navigation2D
 
 import XMonad.Config
+import XMonad.ManageHook
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.WindowSwallowing
+import XMonad.Hooks.EwmhDesktops
 
-import XMonad.Layout.Accordion
 import XMonad.Layout.Circle
 import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
 import XMonad.Layout.Grid (Grid(..))
@@ -44,6 +48,7 @@ import XMonad.Util.EZConfig(mkNamedKeymap)
 import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, showKm, addName, noName, addDescrKeys', subtitle)
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import XMonad.Util.NamedScratchpad
 
 import qualified Data.Map        as M
 import qualified XMonad.Actions.TreeSelect as TS
@@ -61,13 +66,15 @@ myFont    = "xft:FiraCode-16"
 
 
 myApplications :: [(String, String, String)]
-myApplications = [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
+myApplications =
+  [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
   , ("Firefox", "firefox", "nice browser")
   , ("Thunderbird", "thunderbird", "graphical email client")
+  , ("Evince", "evince", "pdf viewer")
   , ("Spotify", "spotify", "music goes brrr")
   , ("Discord", "discord", "discord")
   , ("LibreOffice", "libreoffice", "writing and stuff")
-                 ]
+  ]
 ---------------------------------------------------------------------}}}
 
 -- main & config
@@ -77,8 +84,9 @@ main = do
 
   xmonad
     $ docks
+    $ ewmh
     $ dynamicProjects projects
-    $ addDescrKeys' ((mod4Mask, xK_F1), xMessage) myKeys'   -- TODO use addDescrKeys' -> fix ezconfig bindings | use different displayer
+    $ addDescrKeys' ((mod4Mask, xK_F1), xMessage) myKeys' --TODO use different displayer than xMessage 
     $ myConfig xmproc
 
 -- config
@@ -175,18 +183,11 @@ projects = [ Project { projectName  = wsGEN
 
 -- gridselect
 ---------------------------------------------------------------------{{{
-myAppGrid :: [(String, String)]
-myAppGrid = [ ("Alacritty", "alacritty")
-  , ("Firefox", "firefox")
-  , ("ThunderBird", "thunderbird")
-  , ("Spotify", "spotify")
-  , ("Discord", "discord")
-  , ("LibreOffice", "libreoffice")
-            ]
 
-spawnSelected' :: [(String, String)] -> X ()
-spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
-  where conf = def { gs_cellheight = 40
+spawnSelected' :: [(String, String, String)] -> X ()
+spawnSelected' lst = gridselect conf (map (\(a,b,c)->(a,b)) lst) >>= flip whenJust spawn
+  where conf = def {
+      gs_cellheight = 40
     , gs_cellwidth = 200
     , gs_cellpadding = 6
     , gs_originFractX = 0.5
@@ -241,20 +242,27 @@ myTreeNavigation = M.fromList
     ]
 ---------------------------------------------------------------------}}}
 
+-- scratchpads
+---------------------------------------------------------------------{{{
+scratchpads = [
+  NS "test" "alacritty -e htop" (title =? "htop") defaultFloating
+              ]
+---------------------------------------------------------------------}}}
+
 ---------------------------------------------------------------------}}}
 
 -- my layouts
 ---------------------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
   (tall ||| spiralLayout ||| circle ||| full)
-  where
+    where
      named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
 
      addTopBar      = noFrillsDeco shrinkText topBarTheme
 
      mySpacing      = spacing 5
      tabbs          = addTabs shrinkText myTabConfig
-     sublayouts     = subLayout [] (Simplest ||| Accordion)
+     sublayouts     = subLayout [] (Simplest ||| Circle)
 
     -- Layouts
 
@@ -269,9 +277,8 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
 
      spiralLayout = named "Spiral" $
        addTopBar $
-         tabbs $ sublayouts $
-           mySpacing $
-             spiral (6/7)
+         mySpacing $
+           spiral (6/7)
 
      circle = named "Circle" $
        addTopBar $
@@ -303,9 +310,10 @@ myStartupHook = do
   spawn "setxkbmap -layout de"            -- keyboard layout
   spawnOnce "nitrogen --restore &"        -- background
 
--- manage hook
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
+myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
+  where
+  manageAll = composeAll
+      [ className =? "MPlayer"        --> doFloat
       , className =? "Soffice"        --> doFloat
       , resource  =? "desktop_window" --> doIgnore
       , resource  =? "kdesktop"       --> doIgnore ]
@@ -315,7 +323,7 @@ myManageHook = composeAll
 -- Key bindings
 ---------------------------------------------------------------------{{{
 -- TODO
--- [ ] - Add directional window swaping, moving, merging
+-- [ ] - Add directional window merging
 -- [ ] - Add resize
 
 myKeys' conf = let
@@ -327,17 +335,22 @@ myKeys' conf = let
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 
+  scratchpadNames   = ["test"]
+  scratchpadKeys    = ["1"]
+
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
 
   zipM  m nm ks as f = (zipWith(\k v -> (m++k, addName nm $ f v)) ks as)
   zipDir m nm f = (zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f)
 
-                in
+  zipM'  m nm ks as f b = (zipWith(\k v -> (m++k, addName nm $ f v b)) ks as)
+  zipDir' m nm f b = (zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b)
+
+  in
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
     , ("M-S-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
     , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
-    , ("M-C-<Space>"    , addName "switch sublayout"    $ toSubl NextLayout)
     , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
   ] ^++^
 
@@ -350,42 +363,38 @@ myKeys' conf = let
   ] ^++^
 
   subKeys "Navigation"
-  [ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
-    , ("M-j"            , addName "next window"         $ BW.focusDown)
-    , ("M-k"            , addName "prev. window"        $ BW.focusUp)
-    , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-    , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
-    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
-    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
-  ] ^++^
-
-  subKeys "Sub Layouts"
-  ([ ("M-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
-    , ("M-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
-    , ("M-."         , addName "Focus up in sublayout"   $ onGroup W.focusUp')
-    , ("M-,"         , addName "Focus down in sublayout" $ onGroup W.focusDown')
+  ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
+    -- , ("M-j"            , addName "next window"         $ BW.focusDown)
+    -- , ("M-k"            , addName "prev. window"        $ BW.focusUp)
+      , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
+      , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+      , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
+      , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    ]
-    ++ zipDir   "M-s "     "Merge w/sublayout"          (sendMessage . pullGroup)
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
+    ++ zipDir'   "M-S-"         "swap w"            (windowSwap) False
+    ++ zipDir'   "M-"           "focus w"           (windowGo) False
 
-    -- ++ zipDir   "M-"         "navigate windows"           (windowGo)
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
     ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]
+  )^++^
+
+  subKeys "Sub Layouts"
+  ([  ("M-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
+    , ("M-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
+    , ("M-s <Space>" , addName "switch sublayout"    $ toSubl NextLayout)
+    , ("M-,"         , addName "Focus up in sublayout"   $ onGroup W.focusUp')
+    , ("M-."         , addName "Focus down in sublayout" $ onGroup W.focusDown')
+   ]
+    ++ zipDir   "M-s "     "Merge w/sublayout"          (sendMessage . pullGroup)
   ) ^++^
 
   subKeys "Launcher"
-  [ ("M-a t"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
-    , ("M-a g"          , addName "launch grid select"  $ spawnSelected' myAppGrid)
-  ]
-
-  --subKeys "Utility"
-  --  ----
-  --  ---- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-  --  ---- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-  --  ----
-  --  [((m .|. modm, key), noName $ screenWorkspace sc >>= flip whenJust (windows . f))
-  --    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-  --  , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+  ([ ("M-a 1"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
+    , ("M-a 2"          , addName "launch grid select"  $ spawnSelected' myApplications)
+    , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
+   ] ++ zipWith(\k v -> ("M-d "++k, addName "Open scratchpad" $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
+  )
 
 ------------------------------------------------------------------------
   -- Mouse bindings: default actions bound to mouse events
