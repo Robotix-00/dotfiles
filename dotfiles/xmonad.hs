@@ -206,8 +206,12 @@ treeselectAction a = TS.treeselectAction a
              , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
            ]
              , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []
-             , Node (TS.TSNode "Applications" "" (return ())) []
+             , Node (TS.TSNode "Applications" "My Applications" (return ())) treeApplications
    ]
+   where
+     treeApplications = map (\(a, b, c) -> (Node (TS.TSNode a c (spawn b)) [])) myApplications
+
+
 tsDefaultConfig :: TS.TSConfig a
 tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
   , TS.ts_background   = 0xdd1b2b34
