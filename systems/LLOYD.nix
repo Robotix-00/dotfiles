@@ -6,6 +6,7 @@
       ./../modules/bluetooth.nix
       ./../modules/hardware/printing.nix
       ./../modules/hardware/rtl8821au.nix
+      ./../modules/hardware/corsair.nix
 
       ./../modules/shells/fish.nix
       ./../modules/shells/zsh.nix
