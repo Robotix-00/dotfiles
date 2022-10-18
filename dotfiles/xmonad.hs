@@ -6,6 +6,8 @@
 -- [x] - get directional navigation to work using zip
 -- [ ] - add usefull scratchpads
 -- [ ] - add colorizer to gridselect
+-- [ ] - fix 2d navigation (not selecting windows in other rows properly)
+-- [ ] - add more colors
 ---------------------------------------------------------------------}}}
 
 -- modules
@@ -29,6 +31,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.DynamicProperty
 
 import XMonad.Layout.Circle
 import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
@@ -54,11 +57,15 @@ import qualified Data.Map        as M
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.Layout.BoringWindows as BW
 import qualified XMonad.StackSet as W
+
+import XMonad.Config.Desktop
+-- import XMonad.Wallpaper --TODO for wallpaper switcher (broken)
+
 ---------------------------------------------------------------------}}}
 
 -- constants & settings
 ---------------------------------------------------------------------{{{
-myTerminal  = "alacritty"
+myTerminal  = "urxvt -e zsh"
 myBrowser = "firefox"
 myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobarrc"
 myMenu    = "dmenu_run"
@@ -82,6 +89,7 @@ myApplications =
 main = do
   xmproc <- spawnPipe myStatusbar
 
+  -- setupRandomWallpaper ["$HOME/.dotfiles/assets/background"] --TODO broken
   xmonad
     $ docks
     $ ewmh
@@ -155,7 +163,7 @@ wsDEV = "dev"
 wsWEB = "web"
 wsENT = "media"
 
-myWorkspaces = [ wsGEN, wsWEB, wsDEV, wsENT, "five", "six", "seven", "eight", "nine"]
+myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "NSP"]
 
 projects :: [Project]
 projects = [ Project { projectName  = wsGEN
@@ -170,10 +178,6 @@ projects = [ Project { projectName  = wsGEN
   , Project { projectName  = wsWEB
   , projectDirectory = "~/"
   , projectStartHook = Just $ do spawnOn wsWEB myBrowser
-                                 }
-  , Project { projectName  = wsENT
-  , projectDirectory = "~/"
-  , projectStartHook = Just $ do spawnOn wsENT "spotify"
                                  }
            ]
 ---------------------------------------------------------------------}}}
@@ -248,8 +252,8 @@ myTreeNavigation = M.fromList
 
 -- scratchpads
 ---------------------------------------------------------------------{{{
-scratchpads = [
-  NS "test" "alacritty -e htop" (title =? "htop") defaultFloating
+scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
+              , NS "discord" "discord" (className =? "discord") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 
@@ -296,14 +300,25 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
 ---------------------------------------------------------------------{{{
 
 -- event hook
-myEventHook = swallowEventHookSub (className =? "Alacritty") (return True)
+myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floating)
+          <+> swallowEventHookSub (className =? "Alacritty") (return True)
+  where
+    floating = customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)
 
 
 -- log hook
 myLogHook h = do
-  dynamicLogWithPP $ def {
-    ppOutput = hPutStrLn h
-                         }
+  dynamicLogWithPP $ def
+        { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
+        , ppTitle               = xmobarColor color_active "" . shorten 50 . wrap "<" ">"
+        , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
+        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
+        , ppWsSep               = " "
+        , ppLayout              = xmobarColor "#00FFFF" ""
+        , ppOrder               = id
+        , ppOutput              = hPutStrLn h  
+        , ppExtras              = []
+        }
 
 
 -- startup hook
@@ -312,7 +327,7 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
-  spawnOnce "nitrogen --restore &"        -- background
+  spawn "feh ~/.dotfiles/assets/background --randomize --bg-scale"          -- background
 
 myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
   where
@@ -339,8 +354,8 @@ myKeys' conf = let
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 
-  scratchpadNames   = ["test"]
-  scratchpadKeys    = ["1"]
+  scratchpadNames   = ["discord", "spotify"]
+  scratchpadKeys    = ["1", "2"]
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
 
