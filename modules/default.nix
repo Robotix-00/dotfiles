@@ -7,6 +7,8 @@
 
     ./visual/desktop.nix
     ./visual/fonts.nix
+
+    ./shells/bash.nix
   ];
 
   # Define a user account.

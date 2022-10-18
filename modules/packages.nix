@@ -17,7 +17,7 @@
     tree
     tldr          # like man but with examples
     cmatrix       # if i'm bored
-    convert       # to convert images
+    imagemagick   # to convert images
 
     nix-index
 
