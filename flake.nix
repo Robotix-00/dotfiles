@@ -2,7 +2,7 @@
   description = "Meine absolut sicke Systemkonfiguration";
 
   inputs = {
-    #nixpkgs.url = "nixpkgs/nixos-22.05";
+    stable.url = "nixpkgs/nixos-22.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = {self, nixpkgs, home-manager}:
+  outputs = {self, nixpkgs, home-manager, stable}:
     let
       system = "x86_64-linux";
 
@@ -25,7 +25,7 @@
         inherit system;
 
         specialArgs = {
-          inherit self;
+          inherit self stable;
         };
 
         modules = [
