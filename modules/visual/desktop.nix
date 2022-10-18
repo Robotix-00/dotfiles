@@ -23,7 +23,8 @@
  };
    environment.systemPackages = with pkgs; [
     dmenu       # search menu
-    nitrogen    # background
+    # nitrogen    # background
+    feh         # background and images
     xmobar      # task bar
     pstree      # so window swallowing works for xmonad
   ];
@@ -32,5 +33,14 @@
   services.picom = {
     enable = true;
     fade = true;
+    # experimentalBackends = true;
+
+    # settings = {
+    #   rounded-borders = 1;
+    #   corner-radius = 4;
+    #    corner-radius-exclude = [
+    #      "WM_NAME" = "xmobar"
+    #    ];
+    # };
   };
 }

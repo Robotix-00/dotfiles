@@ -15,8 +15,9 @@
     bat
     tmux
     tree
-    tldr    # like man but with examples
-    cmatrix
+    tldr          # like man but with examples
+    cmatrix       # if i'm bored
+    convert       # to convert images
 
     nix-index
 
@@ -27,17 +28,17 @@
     alsa-utils
     wirelesstools
     iw
+    unzip
+    killall
 
 
     # terminal emulators
     alacritty
-    kitty
+    rxvt-unicode
 
     # programming
     python310
-    python38
     conda
-    glib
 
     platformio
 
@@ -53,7 +54,10 @@
     joplin-desktop
 
 
-    feh # image viewer
-    evince # pdf viewer
+    feh         # image viewer
+    evince      # pdf viewer
+    ranger      # file viewer
+    ueberzug    # image viewer for terminal
+    vlc         # video player
   ];
 }
