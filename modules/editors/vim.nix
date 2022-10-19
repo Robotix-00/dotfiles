@@ -27,7 +27,7 @@
 
           vim-markdown
           markdown-preview-nvim
-
+          emmet-vim
         ];
         opt = [];
       };
