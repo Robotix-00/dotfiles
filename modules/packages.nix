@@ -34,7 +34,7 @@
 
     # terminal emulators
     alacritty
-    rxvt-unicode
+    kitty
 
     # programming
     python310

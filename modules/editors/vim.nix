@@ -16,6 +16,7 @@
           nerdtree
           vim-commentary
           indentLine
+          vim-visual-multi
 
           rainbow
           lightline-vim
@@ -24,10 +25,10 @@
           ale
           vim-polyglot
           vim-autoformat
+          vim-devicons
 
           vim-markdown
           markdown-preview-nvim
-          emmet-vim
         ];
         opt = [];
       };

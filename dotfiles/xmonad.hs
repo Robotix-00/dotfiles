@@ -1,17 +1,28 @@
--- TODOs
----------------------------------------------------------------------{{{
+------------------------------------------------------------------------
+--              __  ____  __                       _                  --  
+--              \ \/ /  \/  | ___  _ __   __ _  __| |                 --
+--               \  /| |\/| |/ _ \| '_ \ / _` |/ _` |                 --
+--               /  \| |  | | (_) | | | | (_| | (_| |                 --
+--              /_/\_\_|  |_|\___/|_| |_|\__,_|\__,_|                 --
+--                                                                    --
+--                          XMonad 0.17.1                             --  
+------------------------------------------------------------------------
+-- Bruno Hoffmann                                                     --
+-- https://github.com/Robotix-00                                      --  
+------------------------------------------------------------------------
+---TODOs-------------------------------------------------------------{{{
 -- [x] - make swallowing work
 -- [~] - add more and better layouts
 -- [x] - gridselect for applications
 -- [x] - get directional navigation to work using zip
--- [ ] - add usefull scratchpads
--- [ ] - add colorizer to gridselect
--- [ ] - fix 2d navigation (not selecting windows in other rows properly)
--- [ ] - add more colors
+-- [~] - add usefull scratchpads
+--  [ ] - add colorizer to gridselect
+-- [x] - fix 2d navigation (not selecting windows in other rows properly)
+-- [x] - Add directional window merging & swaping
+-- [ ] - Add resize to windows
+-- [ ] - add more colors?
 ---------------------------------------------------------------------}}}
-
--- modules
----------------------------------------------------------------------{{{
+---modules-----------------------------------------------------------{{{
 import Data.Monoid
 import Data.Tree
 import System.Exit
@@ -34,9 +45,8 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicProperty
 
 import XMonad.Layout.Circle
-import XMonad.Layout.Fullscreen (fullscreenFull, fullscreenSupport)
 import XMonad.Layout.Grid (Grid(..))
-import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.NoFrillsDecoration(noFrillsDeco)
 import XMonad.Layout.Renamed
 import XMonad.Layout.Simplest
@@ -48,7 +58,7 @@ import XMonad.Layout.WindowNavigation
 
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig(mkNamedKeymap)
-import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, showKm, addName, noName, addDescrKeys', subtitle)
+import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, addName, noName, addDescrKeys', subtitle)
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.NamedScratchpad
@@ -59,39 +69,37 @@ import qualified XMonad.Layout.BoringWindows as BW
 import qualified XMonad.StackSet as W
 
 import XMonad.Config.Desktop
--- import XMonad.Wallpaper --TODO for wallpaper switcher (broken)
 
 ---------------------------------------------------------------------}}}
-
--- constants & settings
----------------------------------------------------------------------{{{
-myTerminal  = "urxvt -e zsh"
+---constants---------------------------------------------------------{{{
+myTerminal  = "kitty"
 myBrowser = "firefox"
-myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobarrc"
+myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
-
 
 myApplications :: [(String, String, String)]
 myApplications =
   [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
+  , ("Kitty", "kitty", "another gpu-based terminal emulator")
   , ("Firefox", "firefox", "nice browser")
+  , ("Brave", "brave", "privacy browser")
   , ("Thunderbird", "thunderbird", "graphical email client")
   , ("Evince", "evince", "pdf viewer")
+  , ("VLC-Player", "vlc", "media player")
   , ("Spotify", "spotify", "music goes brrr")
   , ("Discord", "discord", "discord")
   , ("LibreOffice", "libreoffice", "writing and stuff")
   ]
----------------------------------------------------------------------}}}
 
--- main & config
----------------------------------------------------------------------{{{
+---------------------------------------------------------------------}}}
+---main--------------------------------------------------------------{{{
 main = do
   xmproc <- spawnPipe myStatusbar
 
-  -- setupRandomWallpaper ["$HOME/.dotfiles/assets/background"] --TODO broken
   xmonad
     $ docks
+    $ withNavigation2DConfig myNav2DConf
     $ ewmh
     $ dynamicProjects projects
     $ addDescrKeys' ((mod4Mask, xK_F1), xMessage) myKeys' --TODO use different displayer than xMessage 
@@ -119,9 +127,7 @@ myConfig p = def {
                  }
 
 ---------------------------------------------------------------------}}}
-
--- themes
----------------------------------------------------------------------{{{
+---configs-----------------------------------------------------------{{{
 color_base1   = "#133b45"
 color_base2   = "#1e5c6c"
 color_base3   = "#297f94"
@@ -132,31 +138,44 @@ color_foreg   = color_active
 topbar        = 10
 
 
-myTabConfig = def { activeBorderColor = color_base3
+myTabConfig = def
+  { activeBorderColor = color_base3
   , inactiveBorderColor = color_base1
-
   , activeColor = color_base1
   , inactiveColor = color_base3
-                  }
+  }
 
 topBarTheme = def
   { fontName              = myFont
-    , inactiveBorderColor   = color_base3
-    , inactiveColor         = color_base3
-    , inactiveTextColor     = color_base3
-    , activeBorderColor     = color_active
-    , activeColor           = color_active
-    , activeTextColor       = color_active
-    , urgentBorderColor     = "#FF0000"
-    , urgentTextColor       = "#FFFF00"
-    , decoHeight            = topbar
+  , inactiveBorderColor   = color_base3
+  , inactiveColor         = color_base3
+  , inactiveTextColor     = color_base3
+  , activeBorderColor     = color_active
+  , activeColor           = color_active
+  , activeTextColor       = color_active
+  , urgentBorderColor     = "#FF0000" --TODO
+  , urgentTextColor       = "#FFFF00" --TODO
+  , decoHeight            = topbar
   }
 
 
----------------------------------------------------------------------}}}
+myNav2DConf = def
+    { defaultTiledNavigation    = centerNavigation
+    , floatNavigation           = centerNavigation
+    , screenNavigation          = lineNavigation
+    , layoutNavigation          = [("Full",          centerNavigation)
+    -- line/center same results   ,("Simple Tabs", lineNavigation)
+    --                            ,("Simple Tabs", centerNavigation)
+                                  ]
+    , unmappedWindowRect        = [("Full", singleWindowRect)
+    -- works but breaks tab deco  ,("Simple Tabs", singleWindowRect)
+    -- doesn't work but deco ok   ,("Simple Tabs", fullScreenRect)
+                                  ]
+    }
 
--- workspaces
----------------------------------------------------------------------{{{
+
+---------------------------------------------------------------------}}}
+---workspaces--------------------------------------------------------{{{
 
 wsGEN = "gen"
 wsDEV = "dev"
@@ -181,27 +200,37 @@ projects = [ Project { projectName  = wsGEN
                                  }
            ]
 ---------------------------------------------------------------------}}}
+---interface---------------------------------------------------------{{{
+---gridselect--------------------------------------------------------{{{
 
--- interface
----------------------------------------------------------------------{{{
+remap' :: [(String, String, String)] -> [(String, String)]
+remap' lst = map (\(a,b,c)->(a,b)) lst
 
--- gridselect
----------------------------------------------------------------------{{{
+spawnSelected' :: [(String, String)] -> X ()
+spawnSelected' lst = gridselect myGridConfig lst >>= flip whenJust spawn
 
-spawnSelected' :: [(String, String, String)] -> X ()
-spawnSelected' lst = gridselect conf (map (\(a,b,c)->(a,b)) lst) >>= flip whenJust spawn
-  where conf = def {
-      gs_cellheight = 40
-    , gs_cellwidth = 200
-    , gs_cellpadding = 6
-    , gs_originFractX = 0.5
-    , gs_originFractY = 0.5
-    , gs_font = myFont
-                   }
+myGridConfig = def
+      { gs_cellheight = 40
+      , gs_cellwidth = 200
+      , gs_cellpadding = 6
+      , gs_originFractX = 0.5
+      , gs_originFractY = 0.5
+      , gs_font = myFont
+      }
+
+-- TODO
+myGridColorizer :: Window -> Bool -> X (String, String)
+myGridColorizer = colorRangeFromClassName
+                     black            -- lowest inactive bg
+                     (0x70,0xFF,0x70) -- highest inactive bg
+                     black            -- active bg
+                     white            -- inactive fg
+                     white            -- active fg
+  where black = minBound-- 0x297f94
+        white = maxBound-- 0x133b45
+    
 ---------------------------------------------------------------------}}}
-
--- treeselect stuff
----------------------------------------------------------------------{{{
+---treeselect--------------------------------------------------------{{{
 treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
    [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "shutdown 0"))
@@ -249,18 +278,13 @@ myTreeNavigation = M.fromList
       , ((0, xK_i),      TS.moveHistForward)
     ]
 ---------------------------------------------------------------------}}}
-
--- scratchpads
----------------------------------------------------------------------{{{
+---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
-
 ---------------------------------------------------------------------}}}
-
--- my layouts
----------------------------------------------------------------------{{{
+---layouts-----------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
   (tall ||| spiralLayout ||| circle ||| full)
     where
@@ -295,13 +319,11 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
 
 
 ---------------------------------------------------------------------}}}
-
--- hooks
----------------------------------------------------------------------{{{
+---hooks-------------------------------------------------------------{{{
 
 -- event hook
 myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floating)
-          <+> swallowEventHookSub (className =? "Alacritty") (return True)
+          <+> swallowEventHookSub (className =? "Alacritty" <||> className =? "kitty") (return True)
   where
     floating = customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)
 
@@ -310,7 +332,7 @@ myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floati
 myLogHook h = do
   dynamicLogWithPP $ def
         { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
-        , ppTitle               = xmobarColor color_active "" . shorten 50 . wrap "<" ">"
+        , ppTitle               = xmobarColor color_active "" . shorten 50
         , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
         , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
         , ppWsSep               = " "
@@ -338,13 +360,7 @@ myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
       , resource  =? "kdesktop"       --> doIgnore ]
 
 ---------------------------------------------------------------------}}}
-
--- Key bindings
----------------------------------------------------------------------{{{
--- TODO
--- [ ] - Add directional window merging
--- [ ] - Add resize
-
+---keybindings-------------------------------------------------------{{{
 myKeys' conf = let
   dirKeys   = ["j", "k", "h", "l"]
   arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
@@ -355,7 +371,7 @@ myKeys' conf = let
   modm          = mod4Mask
 
   scratchpadNames   = ["discord", "spotify"]
-  scratchpadKeys    = ["1", "2"]
+  scratchpadKeys    = ["j", "k"]
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
 
@@ -383,16 +399,14 @@ myKeys' conf = let
 
   subKeys "Navigation"
   ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
-    -- , ("M-j"            , addName "next window"         $ BW.focusDown)
-    -- , ("M-k"            , addName "prev. window"        $ BW.focusUp)
       , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
       , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
       , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
       , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipDir'   "M-S-"         "swap w"            (windowSwap) False
-    ++ zipDir'   "M-"           "focus w"           (windowGo) False
+    ++ zipDir'   "M-S-"      "swap w"            (windowSwap) False
+    ++ zipDir'   "M-"        "focus w"           (windowGo) False
 
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
     ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]
@@ -409,15 +423,13 @@ myKeys' conf = let
   ) ^++^
 
   subKeys "Launcher"
-  ([ ("M-a 1"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
-    , ("M-a 2"          , addName "launch grid select"  $ spawnSelected' myApplications)
+  ([  ("M-a j"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
+    , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
     , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
    ] ++ zipWith(\k v -> ("M-d "++k, addName "Open scratchpad" $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   )
 
-------------------------------------------------------------------------
-  -- Mouse bindings: default actions bound to mouse events
---
+---Mouse bindings----------------------------------------------------{{{
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
@@ -426,5 +438,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
                                        >> windows W.shiftMaster))
   ]
 
+---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
 

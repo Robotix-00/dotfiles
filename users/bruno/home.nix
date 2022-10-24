@@ -23,13 +23,16 @@
       name = "SolArc-Dark";
       package = pkgs.solarc-gtk-theme;
     };
-    cursorTheme.name = "Nordzy-cursors";
+    # cursorTheme = {
+    #   name = "bibata-cursors";
+    #   package = pkgs.bibata-cursors;
+    # };
   };
 
 
   # xmonad config
   home.file.".config/xmonad/xmonad.hs".source = ./../../dotfiles/xmonad.hs;
-  home.file.".config/xmonad/xmobarrc".source = ./../../dotfiles/xmobarrc;
+  home.file.".config/xmonad/xmobar/".source = ./../../dotfiles/xmobar;
 
   # tmux
   home.file.".tmux.conf".source = ./../../dotfiles/tmux.conf;
