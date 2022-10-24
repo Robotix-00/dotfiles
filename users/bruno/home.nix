@@ -30,10 +30,9 @@
   };
 
 
-  # xmonad config
-  home.file.".config/xmonad/xmonad.hs".source = ./../../dotfiles/xmonad.hs;
-  home.file.".config/xmonad/xmobar/".source = ./../../dotfiles/xmobar;
-
-  # tmux
-  home.file.".tmux.conf".source = ./../../dotfiles/tmux.conf;
+  home.file = {
+    # ".config/xmonad/".source = ./../../dotfiles/xmonad;   # set to manual
+    ".config/ranger/".source = ./../../dotfiles/ranger;
+    ".tmux.conf".source = ./../../dotfiles/tmux.conf;
+  };
 }

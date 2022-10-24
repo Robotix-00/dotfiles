@@ -38,15 +38,14 @@ import XMonad.Config
 import XMonad.ManageHook
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.SetWMName
+import XMonad.Hooks.ManageDocks           -- avoid xmobar
+import XMonad.Hooks.SetWMName             -- for fixing java gui applications
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicProperty
 
 import XMonad.Layout.Circle
 import XMonad.Layout.Grid (Grid(..))
-import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.NoFrillsDecoration(noFrillsDeco)
 import XMonad.Layout.Renamed
 import XMonad.Layout.Simplest
@@ -56,9 +55,8 @@ import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 
-import XMonad.Util.Cursor
-import XMonad.Util.EZConfig(mkNamedKeymap)
-import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, addName, noName, addDescrKeys', subtitle)
+import XMonad.Util.EZConfig(mkNamedKeymap)    -- for a better keymap layout
+import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, addName, noName, addDescrKeys', subtitle) 
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.NamedScratchpad
@@ -67,8 +65,6 @@ import qualified Data.Map        as M
 import qualified XMonad.Actions.TreeSelect as TS
 import qualified XMonad.Layout.BoringWindows as BW
 import qualified XMonad.StackSet as W
-
-import XMonad.Config.Desktop
 
 ---------------------------------------------------------------------}}}
 ---constants---------------------------------------------------------{{{
