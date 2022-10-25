@@ -366,8 +366,9 @@ myKeys' conf = let
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 
-  scratchpadNames   = ["discord", "spotify"]
+  scratchpadNames   = ["spotify", "discord"]
   scratchpadKeys    = ["j", "k"]
+
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
 
@@ -380,25 +381,26 @@ myKeys' conf = let
   in
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
-    , ("M-S-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
-    , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
-    , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
+  , ("M-C-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
+  , ("M-S-q"          , addName "Locks Screen"        $ spawn "xscreensaver-command -lock")
+  , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
+  , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
   ] ^++^
 
 
   subKeys "Actions"
   [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
-    , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
-    , ("M-S-f"          , addName "spawns browser with nopersonal profile" $ spawn "firefox --profile .mozilla/firefox/v10tpbwa.NoPersonal")
-    , ("M-<Backspace>"  , addName "kill selected window"$ kill)
+  , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
+  , ("M-S-f"          , addName "spawns browser with nopersonal profile" $ spawn "firefox --profile .mozilla/firefox/v10tpbwa.NoPersonal")
+  , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
   subKeys "Navigation"
   ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
-      , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-      , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
-      , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
-      , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
+   , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
+   , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+   , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
+   , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipDir'   "M-S-"      "swap w"            (windowSwap) False

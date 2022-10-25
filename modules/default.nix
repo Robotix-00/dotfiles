@@ -37,7 +37,10 @@
     LC_TIME = "de_DE.utf8";
   };
   services.xserver = {
+    enable = true;
     layout = "de";
+
+    xkbOptions = "Hyper_L:tab_hold";  #TODO
   };
 
 }

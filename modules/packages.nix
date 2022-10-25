@@ -5,31 +5,35 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
-    # CLI tools
-    wget
-    git
-    qemu
-    neofetch
-    htop
-    neofetch
-    bat
-    tmux
-    tree
-    tldr          # like man but with examples
-    cmatrix       # if i'm bored
-    imagemagick   # to convert images
-
-    nix-index
-
     # system utility
     usbutils
-    pciutils
-    inetutils
-    alsa-utils
+    pciutils      
+    alsa-utils    # audio
+    nix-index
+    tldr          # similar to man-pages    
+    neofetch
+
+    #network util
     wirelesstools
+    inetutils     
     iw
+
+    # file management
+    vim
+    git
     unzip
-    killall
+    wget
+    tree
+    bat
+    ranger
+
+    # processes
+    htop
+    killall 
+    qemu
+    
+    cmatrix
+    cbonsai  # if i'm bored
 
 
     # terminal emulators
@@ -39,25 +43,28 @@
     # programming
     python310
     conda
-
     platformio
 
     # GUI tools
     firefox
     brave
-    thunderbird
+
     discord
     spotify
 
-    dconf # so libreoffice can work
-    libreoffice
-    joplin-desktop
 
-
+    # office
+    libreoffice dconf # so libreoffice can work
+    evince            # pdf viewer
+    thunderbird       # email client
+    joplin-desktop    # note-taking software
+    
+    # images
     feh         # image viewer
-    evince      # pdf viewer
-    ranger      # file viewer
     ueberzug    # image viewer for terminal
     vlc         # video player
+    flameshot   # screenshots
+    gimp        # image procesing
+    imagemagick # to convert images
   ];
 }
