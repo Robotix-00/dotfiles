@@ -3,14 +3,21 @@
 
   inputs = {
     stable.url = "nixpkgs/nixos-22.05";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = github:nix-community/home-manager;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    darkmatter-grub-theme = {
+      url = gitlab:VandalByte/darkmatter-grub-theme;
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = {self, nixpkgs, home-manager, stable}:
+  outputs = {self, nixpkgs, home-manager, stable, darkmatter-grub-theme}:
     let
       system = "x86_64-linux";
 
@@ -42,6 +49,7 @@
       nixosConfigurations = {
         LLOYD = mkComputer {
           config = ./systems/LLOYD.nix;
+          extraPackages = [ darkmatter-grub-theme.nixosModule ];
         };
       };
     };

@@ -28,12 +28,32 @@
       efiSysMountPoint = "/boot/efi";
     };
     grub = {
+      enable = true;
+      
       devices = [ "nodev" ];
       efiSupport = true;
-      enable = true;
       version = 2;
-      splashImage = "${self}/assets/bootscreen.jpg";
-      useOSProber = true;
+
+      darkmatter-theme = {
+        enable = true;
+        style = "nixos";
+        icon = "color";
+        resolution = "1440p";
+      };
+
+      extraEntries = ''
+        menuentry 'Windows' --class windows --class os $menuentry_id_option 'osprober-efi-293A-451F' {
+                insmod part_gpt
+                insmod fat
+                set root='hd1,gpt1'
+                if [ x$feature_platform_search_hint = xy ]; then
+                  search --no-floppy --fs-uuid --set=root --hint-bios=hd1,gpt1 --hint-efi=hd1,gpt1 --hint-baremetal=ahci1,gpt1  293A-451F
+                else
+                  search --no-floppy --fs-uuid --set=root 293A-451F
+                fi
+                chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
     };
   };
 
