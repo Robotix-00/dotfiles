@@ -21,7 +21,7 @@
         };
       };
 
-      mkComputer = configurationNix: nixpkgs.lib.nixosSystem {
+      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], ...}: nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {
@@ -29,20 +29,20 @@
         };
 
         modules = [
-          configurationNix
+          config
           home-manager.nixosModules.home-manager {
             home-manager.users.bruno = {
-              imports = [ ./users/bruno/home.nix ];
+              imports = [ ./users/bruno/home.nix ] ++ extraHomePackages;
             };
           }
-        ];
+        ] ++ extraPackages;
       };
 
     in {
       nixosConfigurations = {
-        LLOYD = mkComputer (
-          ./systems/LLOYD.nix
-          );
+        LLOYD = mkComputer {
+          config = ./systems/LLOYD.nix;
+        };
       };
     };
 }
