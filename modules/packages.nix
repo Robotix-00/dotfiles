@@ -11,6 +11,7 @@
     alsa-utils    # audio
     nix-index
     tldr          # similar to man-pages    
+    cheat
     neofetch
 
     #network util
@@ -26,6 +27,8 @@
     tree
     bat
     ranger
+    ripgrep
+    peco
 
     # processes
     htop
@@ -58,7 +61,8 @@
     evince            # pdf viewer
     thunderbird       # email client
     joplin-desktop    # note-taking software
-    
+    languagetool
+
     # images
     feh         # image viewer
     ueberzug    # image viewer for terminal
