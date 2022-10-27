@@ -4,9 +4,12 @@
     [
       ./../modules
       ./../modules/bluetooth.nix
+      
       ./../modules/hardware/printing.nix
-      ./../modules/hardware/rtl8821au.nix
       ./../modules/hardware/corsair.nix
+
+      ./../modules/hardware/wifi/rtl8821au.nix
+      ./../modules/hardware/wifi/rtl8812au.nix
 
       ./../modules/shells/fish.nix
       ./../modules/shells/zsh.nix

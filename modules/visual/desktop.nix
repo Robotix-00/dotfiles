@@ -4,11 +4,13 @@
   services = {
     xserver = {
       enable = true;
+      layout = "de";
+      xkbOptions = ""; #TODO
+
       displayManager.lightdm = {
         enable = true;
         background = "${self}/assets/bootscreen.jpg";
       };
-      desktopManager.xterm.enable = false;
 
       windowManager.xmonad = {
         enable = true;
@@ -33,14 +35,5 @@
   services.picom = {
     enable = true;
     fade = true;
-    # experimentalBackends = true;
-
-    # settings = {
-    #   rounded-borders = 1;
-    #   corner-radius = 4;
-    #    corner-radius-exclude = [
-    #      "WM_NAME" = "xmobar"
-    #    ];
-    # };
   };
 }
