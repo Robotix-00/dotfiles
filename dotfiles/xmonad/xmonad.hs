@@ -11,14 +11,9 @@
 -- https://github.com/Robotix-00                                      --  
 ------------------------------------------------------------------------
 ---TODOs-------------------------------------------------------------{{{
--- [x] - make swallowing work
 -- [~] - add more and better layouts
--- [x] - gridselect for applications
--- [x] - get directional navigation to work using zip
 -- [~] - add usefull scratchpads
 --  [ ] - add colorizer to gridselect
--- [x] - fix 2d navigation (not selecting windows in other rows properly)
--- [x] - Add directional window merging & swaping
 -- [ ] - Add resize to windows
 -- [ ] - add more colors?
 ---------------------------------------------------------------------}}}
@@ -78,6 +73,7 @@ myApplications :: [(String, String, String)]
 myApplications =
   [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
   , ("Kitty", "kitty", "another gpu-based terminal emulator")
+  , ("Vim", myTerminal ++ " -e vim", "text editor")
   , ("Firefox", "firefox", "nice browser")
   , ("Brave", "brave", "privacy browser")
   , ("Thunderbird", "thunderbird", "graphical email client")
@@ -86,6 +82,8 @@ myApplications =
   , ("Spotify", "spotify", "music goes brrr")
   , ("Discord", "discord", "discord")
   , ("LibreOffice", "libreoffice", "writing and stuff")
+  , ("Gimp", "gimp", "painting'n'shit")
+  , ("Joplin", "joplin_desktop", "Notes")
   ]
 
 ---------------------------------------------------------------------}}}
@@ -231,11 +229,12 @@ treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
    [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "shutdown 0"))
            [ Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "reboot")) []
-             , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
-             , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
+           , Node (TS.TSNode "Lock screen" "Locks the screen" (spawn "xscreensaver-command -lock")) []
+           , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
+           , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
            ]
-             , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []
-             , Node (TS.TSNode "Applications" "My Applications" (return ())) treeApplications
+   , Node (TS.TSNode "Applications" "My Applications" (return ())) treeApplications
+   , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []       --TODO
    ]
    where
      treeApplications = map (\(a, b, c) -> (Node (TS.TSNode a c (spawn b)) [])) myApplications

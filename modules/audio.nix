@@ -15,5 +15,11 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+
+  environment.systemPackages = with pkgs; [
+    alsa-utils
+  ];
+
   systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
 }

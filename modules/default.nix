@@ -1,23 +1,33 @@
-{ pkgs, ... }:
+{ pkgs, lib, isDesktop, ... }:
 {
   imports = [
     ./packages.nix
     ./editors/vim.nix
+    
+    ./shells
+  ] ++ lib.optionals isDesktop [
     ./audio.nix
 
     ./visual/desktop.nix
     ./visual/fonts.nix
-
-    ./shells/bash.nix
   ];
+  
+  nix = {
+    package = pkgs.nixUnstable;
+    settings.experimental-features = [ "nix-command" "flakes" ];
+  };
 
   # Define a user account.
-  users.users.bruno = {
-    isNormalUser = true;
-    description = "bruno";
-    extraGroups = [ "audio" "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    ];
+  users = {
+    defaultUserShell = pkgs.zsh;
+
+    users.bruno = {
+      isNormalUser = true;
+      description = "bruno";
+      extraGroups = [ "audio" "networkmanager" "wheel" "docker" ];
+      packages = with pkgs; [
+      ];
+    };
   };
 
   # Set your time zone.

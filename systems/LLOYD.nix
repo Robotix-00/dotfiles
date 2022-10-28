@@ -11,14 +11,9 @@
       ./../modules/hardware/wifi/rtl8821au.nix
       ./../modules/hardware/wifi/rtl8812au.nix
 
-      ./../modules/shells/fish.nix
-      ./../modules/shells/zsh.nix
       ./../modules/shells/tmux.nix
+      ./../modules/shells/fish.nix
     ];
-  users.defaultUserShell = pkgs.zsh;
-
-  nix.package = pkgs.nixUnstable;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Bootloader. 
   boot.supportedFilesystems = [ "ntfs" ];

@@ -1,4 +1,4 @@
-{pkgs, ... }:
+{ pkgs, lib, isDesktop, ... }:
 {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -8,7 +8,6 @@
     # system utility
     usbutils
     pciutils      
-    alsa-utils    # audio
     nix-index
     tldr          # similar to man-pages    
     cheat
@@ -34,27 +33,24 @@
     htop
     killall 
     qemu
+    docker
+    docker-compose
     
     cmatrix
     cbonsai  # if i'm bored
-
-
-    # terminal emulators
-    alacritty
-    kitty
+    figlet
 
     # programming
     python310
     conda
     platformio
 
-    # GUI tools
-    firefox
-    brave
+  ] ++ lib.optionals isDesktop [
+    # Desktop applications
 
-    discord
-    spotify
-
+    # terminal emulators
+    alacritty
+    kitty
 
     # office
     libreoffice dconf # so libreoffice can work
@@ -70,5 +66,14 @@
     flameshot   # screenshots
     gimp        # image procesing
     imagemagick # to convert images
+
+    # GUI tools
+    firefox
+    brave
+
+    discord
+    spotify    
   ];
+
+  virtualisation.docker.enable = true;
 }

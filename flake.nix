@@ -2,9 +2,9 @@
   description = "Meine absolut sicke Systemkonfiguration";
 
   inputs = {
-    stable.url = "nixpkgs/nixos-22.05";
-
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
+    
+    nixpkgs_stable.url = github:nixos/nixpkgs/nixos-22.05;
 
     home-manager = {
       url = github:nix-community/home-manager;
@@ -17,22 +17,30 @@
     };
   };
 
-  outputs = {self, nixpkgs, home-manager, stable, darkmatter-grub-theme}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, darkmatter-grub-theme}:
     let
       system = "x86_64-linux";
+      pkgConfig = {
+        allowUnfree = true;
+      };
 
       pkgs = import nixpkgs {
         inherit system;
-        config = {
-          allowUnfree = true;
-        };
+        config = pkgConfig;
       };
 
-      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], ...}: nixpkgs.lib.nixosSystem {
+      stable = import nixpkgs_stable {
+        inherit system;
+        config = pkgConfig;
+      };
+
+      
+
+      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}: nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {
-          inherit self stable;
+          inherit self stable isDesktop;
         };
 
         modules = [
