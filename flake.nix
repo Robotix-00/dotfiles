@@ -11,13 +11,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    darkmatter-grub-theme = {
+    grub-theme = {
       url = gitlab:VandalByte/darkmatter-grub-theme;
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, darkmatter-grub-theme}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, grub-theme}:
     let
       system = "x86_64-linux";
       pkgConfig = {
@@ -45,6 +45,8 @@
 
         modules = [
           config
+          grub-theme.nixosModule
+
           home-manager.nixosModules.home-manager {
             home-manager.users.bruno = {
               imports = [ ./users/bruno/home.nix ] ++ extraHomePackages;
@@ -57,7 +59,7 @@
       nixosConfigurations = {
         LLOYD = mkComputer {
           config = ./systems/LLOYD.nix;
-          extraPackages = [ darkmatter-grub-theme.nixosModule ];
+          isDesktop = true;
         };
       };
     };

@@ -39,5 +39,5 @@ Config {
 	-- layout
         sepChar = "%",
         alignSep = "}{",
-        template = "%StdinReader% | %multicpu% %coretemp% | %memory% * %swap% | %dynnetwork% }{<fc=#ee9a00>%date%</fc> | %uname% | %EDDC% " 
+        template = "%StdinReader% | %multicpu% %coretemp% | %memory% * %swap% | %dynnetwork% }{<action='bash refreshBackground.sh'>[~]</action> <fc=#ee9a00>%date%</fc> | %uname% | %EDDC% " 
 }

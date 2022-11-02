@@ -3,7 +3,9 @@
   programs.neovim = {
     enable = true;
     vimAlias = true;
+    
     defaultEditor = true;
+
     configure = {
       customRC = ''
         set termguicolors
@@ -11,6 +13,7 @@
 
         setlocal foldmethod=marker
       '';
+
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           nerdtree

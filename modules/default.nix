@@ -3,7 +3,8 @@
   imports = [
     ./packages.nix
     ./editors/vim.nix
-    
+    ./docker.nix
+
     ./shells
   ] ++ lib.optionals isDesktop [
     ./audio.nix

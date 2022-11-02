@@ -9,6 +9,7 @@
     usbutils
     pciutils      
     nix-index
+    nix-tree
     tldr          # similar to man-pages    
     cheat
     neofetch
@@ -21,11 +22,14 @@
     # file management
     vim
     git
+    gource  # git visualisation tool
     unzip
     wget
     tree
     bat
     ranger
+    odt2txt pandoc ueberzug poppler_utils # ranger util
+
     ripgrep
     peco
 
@@ -33,8 +37,6 @@
     htop
     killall 
     qemu
-    docker
-    docker-compose
     
     cmatrix
     cbonsai  # if i'm bored
@@ -45,6 +47,7 @@
     conda
     platformio
 
+    wineWowPackages.stable
   ] ++ lib.optionals isDesktop [
     # Desktop applications
 
@@ -61,7 +64,6 @@
 
     # images
     feh         # image viewer
-    ueberzug    # image viewer for terminal
     vlc         # video player
     flameshot   # screenshots
     gimp        # image procesing
@@ -72,8 +74,15 @@
     brave
 
     discord
-    spotify    
+    spotify
+
+    (lutris.override {
+      extraPkgs = pkgs: [
+        pkgs.gnome.adwaita-icon-theme
+      ];
+    })
   ];
 
-  virtualisation.docker.enable = true;
+  #for epic games
+  hardware.opengl.driSupport32Bit = true;
 }

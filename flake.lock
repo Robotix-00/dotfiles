@@ -1,6 +1,6 @@
 {
   "nodes": {
-    "darkmatter-grub-theme": {
+    "grub-theme": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -75,7 +75,7 @@
     },
     "root": {
       "inputs": {
-        "darkmatter-grub-theme": "darkmatter-grub-theme",
+        "grub-theme": "grub-theme",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixpkgs_stable": "nixpkgs_stable"
