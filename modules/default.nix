@@ -4,6 +4,7 @@
     ./packages.nix
     ./editors/vim.nix
     ./docker.nix
+    ./gpg.nix
 
     ./shells
   ] ++ lib.optionals isDesktop [

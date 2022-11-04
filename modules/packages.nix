@@ -22,6 +22,8 @@
     # file management
     vim
     git
+    git-secret
+
     gource  # git visualisation tool
     unzip
     wget
@@ -75,6 +77,7 @@
 
     discord
     spotify
+    super-productivity
 
     (lutris.override {
       extraPkgs = pkgs: [

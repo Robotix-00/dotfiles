@@ -83,7 +83,8 @@ myApplications =
   , ("Discord", "discord", "discord")
   , ("LibreOffice", "libreoffice", "writing and stuff")
   , ("Gimp", "gimp", "painting'n'shit")
-  , ("Joplin", "joplin_desktop", "Notes")
+  , ("Joplin", "joplin-desktop", "Notes")
+  , ("Productivity", "super-productivity", "TODOs")
   ]
 
 ---------------------------------------------------------------------}}}
@@ -276,6 +277,7 @@ myTreeNavigation = M.fromList
 ---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
+              , NS "productivity" "super-productivity" (className =? "superProductivity") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
@@ -365,8 +367,8 @@ myKeys' conf = let
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 
-  scratchpadNames   = ["spotify", "discord"]
-  scratchpadKeys    = ["j", "k"]
+  scratchpadNames   = ["spotify", "productivity", "discord"]
+  scratchpadKeys    = ["j", "k", "ö"]
 
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks

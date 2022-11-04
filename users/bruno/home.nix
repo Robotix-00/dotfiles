@@ -17,6 +17,7 @@
   programs = {
     home-manager.enable = true;
 
+
     git = {
       enable = true;
       userName = "Bruno Hoffmann";
@@ -26,6 +27,11 @@
 
   services = {
     xscreensaver.enable = true;
+
+    gpg-agent = {
+      enable = true;
+      # enableZshIntegration = true;
+    };
   };
 
   gtk = {
