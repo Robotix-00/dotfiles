@@ -7,6 +7,11 @@
       layout = "de";
       xkbOptions = ""; #TODO
 
+      displayManager.sessionCommands = "
+      xset -dpms
+      # xset s off
+      ";
+
       displayManager.lightdm = {
         enable = true;
         background = "${self}/assets/bootscreen.jpg";
