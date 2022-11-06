@@ -1,10 +1,10 @@
-{ pkgs, config, lib, self, ... }:
+{ pkgs, config, lib, self, isDesktop, ... }:
 {
   imports =
     [
       ./../modules
       ./../modules/bluetooth.nix
-      
+
       ./../modules/hardware/printing.nix
       ./../modules/hardware/corsair.nix
 
@@ -13,9 +13,11 @@
 
       ./../modules/shells/tmux.nix
       ./../modules/shells/fish.nix
+    ] ++ lib.optionals isDesktop [
+      ./../modules/editors/vscode.nix
     ];
 
-  # Bootloader. 
+  # Bootloader
   boot.supportedFilesystems = [ "ntfs" ];
   boot.loader = {
     efi = {
@@ -24,7 +26,7 @@
     };
     grub = {
       enable = true;
-      
+
       devices = [ "nodev" ];
       efiSupport = true;
       version = 2;
@@ -89,7 +91,7 @@
   swapDevices =
     [ { device = "/dev/disk/by-uuid/169130e0-3ea6-46b8-89c9-d21c73af5608"; }
     ];
- 
+
   # mount mass storage drive in user space
   fileSystems."/home/bruno/Data" = {
     device = "dev/disk/by-label/Data";

@@ -74,6 +74,7 @@ myApplications =
   [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
   , ("Kitty", "kitty", "another gpu-based terminal emulator")
   , ("Vim", myTerminal ++ " -e vim", "text editor")
+  , ("VS Code", "code", "light weight code editor")
   , ("Firefox", "firefox", "nice browser")
   , ("Brave", "brave", "privacy browser")
   , ("Thunderbird", "thunderbird", "graphical email client")
@@ -425,7 +426,7 @@ myKeys' conf = let
   ([  ("M-a j"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
     , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
     , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
-   ] ++ zipWith(\k v -> ("M-d "++k, addName "Open scratchpad" $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
+   ] ++ zipWith(\k v -> ("M-d "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   )
 
 ---Mouse bindings----------------------------------------------------{{{

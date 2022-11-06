@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
-    
+
     nixpkgs_stable.url = github:nixos/nixpkgs/nixos-22.05;
 
     home-manager = {
@@ -33,8 +33,6 @@
         inherit system;
         config = pkgConfig;
       };
-
-      
 
       mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}: nixpkgs.lib.nixosSystem {
         inherit system;
