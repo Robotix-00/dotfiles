@@ -1,27 +1,31 @@
 ------------------------------------------------------------------------
---              __  ____  __                       _                  --  
+
 --              \ \/ /  \/  | ___  _ __   __ _  __| |                 --
 --               \  /| |\/| |/ _ \| '_ \ / _` |/ _` |                 --
 --               /  \| |  | | (_) | | | | (_| | (_| |                 --
 --              /_/\_\_|  |_|\___/|_| |_|\__,_|\__,_|                 --
 --                                                                    --
---                          XMonad 0.17.1                             --  
+--                          XMonad 0.17.1                             --
 ------------------------------------------------------------------------
 -- Bruno Hoffmann                                                     --
--- https://github.com/Robotix-00                                      --  
+-- https://github.com/Robotix-00                                      --
 ------------------------------------------------------------------------
 ---TODOs-------------------------------------------------------------{{{
 -- [~] - add more and better layouts
 -- [~] - add usefull scratchpads
---  [ ] - add colorizer to gridselect
+-- [ ] - add colorizer to gridselect
 -- [ ] - Add resize to windows
 -- [ ] - add more colors?
+-- [~] - add filter function to application (not sure if possible)
 ---------------------------------------------------------------------}}}
 ---modules-----------------------------------------------------------{{{
 import Data.Monoid
 import Data.Tree
+import Data.Maybe
 import System.Exit
+import System.Directory
 import XMonad
+import System.IO
 
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
@@ -38,6 +42,7 @@ import XMonad.Hooks.SetWMName             -- for fixing java gui applications
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicProperty
+import XMonad.Hooks.StatusBar
 
 import XMonad.Layout.Circle
 import XMonad.Layout.Grid (Grid(..))
@@ -51,7 +56,7 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 
 import XMonad.Util.EZConfig(mkNamedKeymap)    -- for a better keymap layout
-import XMonad.Util.NamedActions(NamedAction, (^++^), xMessage, addName, noName, addDescrKeys', subtitle) 
+import XMonad.Util.NamedActions(NamedAction, (^++^), showKm, addName, noName, addDescrKeys', subtitle)
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.NamedScratchpad
@@ -69,8 +74,10 @@ myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
 
+
 myApplications :: [(String, String, String)]
 myApplications =
+  -- filter(\(_, command, _) -> isNothing $ findExecutable command) --TODO: findExecutable returns IO action, see https://stackoverflow.com/questions/23094932/how-to-use-io-string-function-in-xmonad-key-bindings
   [ ("Alacritty", "alacritty", "gpu-based terminal emulator")
   , ("Kitty", "kitty", "another gpu-based terminal emulator")
   , ("Vim", myTerminal ++ " -e vim", "text editor")
@@ -91,18 +98,27 @@ myApplications =
 ---------------------------------------------------------------------}}}
 ---main--------------------------------------------------------------{{{
 main = do
-  xmproc <- spawnPipe myStatusbar
-
   xmonad
-    $ docks
-    $ withNavigation2DConfig myNav2DConf
-    $ ewmh
-    $ dynamicProjects projects
-    $ addDescrKeys' ((mod4Mask, xK_F1), xMessage) myKeys' --TODO use different displayer than xMessage 
-    $ myConfig xmproc
+    . withNavigation2DConfig myNav2DConf
+    . dynamicProjects projects
+    . addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys' --TODO use different displayer than xMessage
+    . withSB mySB
+    . ewmh
+    . docks
+    $ myConfig
+
+-- Display keyboard mappings using zenity
+-- from https://github.com/thomasf/dotfiles-thomasf-xmonad/
+--              blob/master/.xmonad/lib/XMonad/Config/A00001.hs
+showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
+showKeybindings x = addName "Show Keybindings" $ io $ do
+    h <- spawnPipe "zenity --text-info --font=terminus"
+    hPutStr h (unlines $ showKm x)
+    hClose h
+    return ()
 
 -- config
-myConfig p = def {
+myConfig = def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = False,
@@ -118,7 +134,7 @@ myConfig p = def {
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook p,
+        -- logHook            = myLogHook,
         startupHook        = myStartupHook
                  }
 
@@ -178,7 +194,7 @@ wsDEV = "dev"
 wsWEB = "web"
 wsENT = "media"
 
-myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "NSP"]
+myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "zero"]
 
 projects :: [Project]
 projects = [ Project { projectName  = wsGEN
@@ -197,6 +213,19 @@ projects = [ Project { projectName  = wsGEN
            ]
 ---------------------------------------------------------------------}}}
 ---interface---------------------------------------------------------{{{
+---statusbar---------------------------------------------------------{{{
+mySB = statusBarProp myStatusbar (pure myPP)
+
+myPP = def
+        { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
+        , ppTitle               = xmobarColor color_active "" . shorten 50
+        , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
+        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
+        , ppWsSep               = " "
+        , ppLayout              = xmobarColor "#00FFFF" ""
+        , ppOrder               = id
+        }
+---------------------------------------------------------------------}}}
 ---gridselect--------------------------------------------------------{{{
 
 remap' :: [(String, String, String)] -> [(String, String)]
@@ -214,7 +243,7 @@ myGridConfig = def
       , gs_font = myFont
       }
 
--- TODO
+-- TODO: get this to work
 myGridColorizer :: Window -> Bool -> X (String, String)
 myGridColorizer = colorRangeFromClassName
                      black            -- lowest inactive bg
@@ -224,7 +253,6 @@ myGridColorizer = colorRangeFromClassName
                      white            -- active fg
   where black = minBound-- 0x297f94
         white = maxBound-- 0x133b45
-    
 ---------------------------------------------------------------------}}}
 ---treeselect--------------------------------------------------------{{{
 treeselectAction :: TS.TSConfig (X ()) -> X ()
@@ -325,22 +353,6 @@ myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floati
   where
     floating = customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)
 
-
--- log hook
-myLogHook h = do
-  dynamicLogWithPP $ def
-        { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
-        , ppTitle               = xmobarColor color_active "" . shorten 50
-        , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
-        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
-        , ppWsSep               = " "
-        , ppLayout              = xmobarColor "#00FFFF" ""
-        , ppOrder               = id
-        , ppOutput              = hPutStrLn h  
-        , ppExtras              = []
-        }
-
-
 -- startup hook
 myStartupHook = do
   spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off"
@@ -369,7 +381,7 @@ myKeys' conf = let
   modm          = mod4Mask
 
   scratchpadNames   = ["spotify", "productivity", "discord"]
-  scratchpadKeys    = ["j", "k", "ö"]
+  scratchpadKeys    = ["j", "k", "l"]
 
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
@@ -427,7 +439,12 @@ myKeys' conf = let
     , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
     , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
    ] ++ zipWith(\k v -> ("M-d "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
-  )
+  ) ^++^
+
+  subKeys "Volume Control"
+  [ ("<XF86AudioRaiseVolume>", addName "raise volume" $ spawn "amixer set Master 10%+")
+  , ("<XF86AudioLowerVolume>", addName "lower volume" $ spawn "amixer set Master 10%-")
+  ]
 
 ---Mouse bindings----------------------------------------------------{{{
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
