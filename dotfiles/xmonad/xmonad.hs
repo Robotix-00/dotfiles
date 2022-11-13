@@ -410,8 +410,8 @@ myKeys' conf = let
   subKeys "Layout"
   [ ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
   , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
-  , ("M-S-+"          , addName "increase master count" $ sendMessage (IncMasterN 1))
-  , ("M-S--"          , addName "decrease master count" $ sendMessage (IncMasterN (-1)))
+  , ("M-C-+"          , addName "increase master count" $ sendMessage (IncMasterN 1))
+  , ("M-C--"          , addName "decrease master count" $ sendMessage (IncMasterN (-1)))
   ] ^++^
 
 
