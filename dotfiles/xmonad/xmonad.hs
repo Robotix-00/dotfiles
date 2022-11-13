@@ -54,6 +54,7 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.ThreeColumns
 
 import XMonad.Util.EZConfig(mkNamedKeymap)    -- for a better keymap layout
 import XMonad.Util.NamedActions(NamedAction, (^++^), showKm, addName, noName, addDescrKeys', subtitle)
@@ -315,36 +316,40 @@ scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
-  (tall ||| spiralLayout ||| circle ||| full)
-    where
-     named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
+  (three ||| tall ||| spiralLayout ||| circle ||| full)
+  where
+    named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
 
-     addTopBar      = noFrillsDeco shrinkText topBarTheme
+    addTopBar      = noFrillsDeco shrinkText topBarTheme
 
-     mySpacing      = spacing 5
-     tabbs          = addTabs shrinkText myTabConfig
-     sublayouts     = subLayout [] (Simplest ||| Circle)
+    mySpacing      = spacing 5
+    tabbs          = addTabs shrinkText myTabConfig
+    sublayouts     = subLayout [] (Simplest ||| Circle)
 
     -- Layouts
+    three = named "Three" $
+      addTopBar $
+        mySpacing $
+          ThreeColMid 1 (3/100) (1/2)
 
-     tall = named "Tall" $
-       addTopBar $
-         tabbs $ sublayouts $
-           mySpacing $
-             Tall 1 (3/100) (1/2)
+    tall = named "Tall" $
+      addTopBar $
+        tabbs $ sublayouts $
+          mySpacing $
+            Tall 1 (3/100) (1/2)
 
-     full = named "Full" $
-       Full
+    full = named "Full" $
+      Full
 
-     spiralLayout = named "Spiral" $
-       addTopBar $
-         mySpacing $
-           spiral (6/7)
+    spiralLayout = named "Spiral" $
+      addTopBar $
+        mySpacing $
+          spiral (6/7)
 
-     circle = named "Circle" $
-       addTopBar $
-         mySpacing $
-           Circle
+    circle = named "Circle" $
+      addTopBar $
+        mySpacing $
+          Circle
 
 
 ---------------------------------------------------------------------}}}
