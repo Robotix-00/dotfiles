@@ -10,6 +10,7 @@
     file = {
       # ".config/xmonad/".source = ./../../dotfiles/xmonad;   # set to manual, active development
       # ".config/ranger/".source = ./../../dotfiles/ranger;   # set to manual, doesnt work because confdir has to be writable
+      # ".config/kitty/".source = ./../../dotfiles/ranger;
       ".tmux.conf".source = ./../../dotfiles/tmux.conf;
     };
   };
@@ -36,7 +37,7 @@
 
   gtk = {
     enable = true;
-    
+
     font = {
       name = "Fira Code";
       package = pkgs.fira-code;
