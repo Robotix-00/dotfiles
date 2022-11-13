@@ -7,16 +7,16 @@
   environment.systemPackages = with pkgs; [
     # system utility
     usbutils
-    pciutils      
+    pciutils
     nix-index
     nix-tree
-    tldr          # similar to man-pages    
+    tldr          # similar to man-pages
     cheat
     neofetch
 
     #network util
     wirelesstools
-    inetutils     
+    inetutils
     iw
 
     # file management
@@ -37,9 +37,9 @@
 
     # processes
     htop
-    killall 
+    killall
     qemu
-    
+
     cmatrix
     cbonsai  # if i'm bored
     figlet
@@ -78,14 +78,7 @@
     discord
     spotify
     super-productivity
-
-    (lutris.override {
-      extraPkgs = pkgs: [
-        pkgs.gnome.adwaita-icon-theme
-      ];
-    })
   ];
 
-  #for epic games
   hardware.opengl.driSupport32Bit = true;
 }

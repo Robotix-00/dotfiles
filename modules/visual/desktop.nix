@@ -1,5 +1,5 @@
 { pkgs, self, ... }:
-{ 
+{
  # desktop/display/login
   services = {
     xserver = {
@@ -9,7 +9,6 @@
 
       displayManager.sessionCommands = "
       xset -dpms
-      # xset s off
       ";
 
       displayManager.lightdm = {
@@ -30,10 +29,10 @@
  };
    environment.systemPackages = with pkgs; [
     dmenu       # search menu
-    # nitrogen    # background
     feh         # background and images
     xmobar      # task bar
     pstree      # so window swallowing works for xmonad
+    gnome.zenity# text displaying for keybinds
   ];
 
 
