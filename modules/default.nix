@@ -13,7 +13,7 @@
     ./visual/desktop.nix
     ./visual/fonts.nix
   ];
-  
+
   nix = {
     package = pkgs.nixUnstable;
     settings.experimental-features = [ "nix-command" "flakes" ];
@@ -30,6 +30,10 @@
       packages = with pkgs; [
       ];
     };
+  };
+
+  environment.sessionVariables = rec {
+    DOTFILES  = "/home/bruno/.dotfiles";
   };
 
   # Set your time zone.
