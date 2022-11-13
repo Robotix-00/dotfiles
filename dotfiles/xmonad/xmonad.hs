@@ -405,8 +405,13 @@ myKeys' conf = let
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
   , ("M-C-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
   , ("M-S-q"          , addName "Locks Screen"        $ spawn "xscreensaver-command -lock")
-  , ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
+  ] ^++^
+
+  subKeys "Layout"
+  [ ("M-<Space>"      , addName "switch layout"       $ sendMessage NextLayout)
   , ("M-S-<Space>"    , addName "reset to default layout" $ setLayout $ XMonad.layoutHook conf)
+  , ("M-S-+"          , addName "increase master count" $ sendMessage (IncMasterN 1))
+  , ("M-S--"          , addName "decrease master count" $ sendMessage (IncMasterN (-1)))
   ] ^++^
 
 
