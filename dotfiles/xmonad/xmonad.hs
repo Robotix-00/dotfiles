@@ -70,7 +70,7 @@ import qualified XMonad.StackSet as W
 ---constants---------------------------------------------------------{{{
 myTerminal  = "kitty"
 myBrowser = "firefox"
-myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
+myStatusbar = "sleep 1 && xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
 
@@ -98,6 +98,9 @@ myApplications =
 ---------------------------------------------------------------------}}}
 ---main--------------------------------------------------------------{{{
 main = do
+  -- ! xmobar has to be started once before working properly; bodged it -> TODO
+  spawn "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs & sleep .2 && killall xmobar"
+
   xmonad
     . withNavigation2DConfig myNav2DConf
     . dynamicProjects projects
