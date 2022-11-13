@@ -20,6 +20,16 @@ let
       sha256 = "sha256-R6XcT9ygBnAHjnybjxkabna8x9W1LJJN1DzwzqteQo0=";
     };
   };
+
+  vim-hexedit = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-hexedit";
+    src = pkgs.fetchFromGitHub {
+      owner = "rootkiter";
+      repo = "vim-hexedit";
+      rev = "174dd836d49b0bd785647f0730ad4f98ad101377";
+      sha256 = "sha256-tniUeTt9odzHHFTIcPPbVstnQMBcHvWA1FMrr9vj/TA=";
+    };
+  };
 in
 {
   programs.neovim = {
@@ -44,8 +54,6 @@ in
           indentLine
           vim-visual-multi  # multi line edits
 
-          vim-gitgutter
-
           ale
           vim-autoformat
 
@@ -56,14 +64,19 @@ in
           markdown-preview-nvim
 
           # visual
-          vim-better-comments
-          vim-better-whitespace
           vim-devicons
           syntastic
           rainbow
           lightline-vim
+        ] ++ [
+          vim-better-comments
+          vim-better-whitespace
+          vim-hexedit
         ];
-        opt = [];
+
+        opt = [
+          vim-gitgutter
+        ];
       };
     };
   };
