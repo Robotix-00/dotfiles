@@ -41,7 +41,7 @@ in
     configure = {
       customRC = ''
         set termguicolors
-        set number
+        set relativenumber
 
         setlocal foldmethod=marker
       '';

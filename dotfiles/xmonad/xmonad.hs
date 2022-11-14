@@ -209,6 +209,7 @@ projects = [ Project { projectName  = wsGEN
   , projectDirectory = "~/"
   , projectStartHook = Just $ do spawnOn wsDEV myTerminal
                                  spawnOn wsDEV myTerminal
+                                 spawnOn wsDEV myTerminal
             }
   , Project { projectName  = wsWEB
   , projectDirectory = "~/"
@@ -315,7 +316,7 @@ scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
-myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
+myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows)
   (three ||| tall ||| spiralLayout ||| circle ||| full)
   where
     named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
@@ -329,6 +330,7 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows) $
     -- Layouts
     three = named "Three" $
       addTopBar $
+        -- tabbs $ sublayouts $
         mySpacing $
           ThreeColMid 1 (3/100) (1/2)
 
