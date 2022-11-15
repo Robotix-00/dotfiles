@@ -10,14 +10,9 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    grub-theme = {
-      url = gitlab:VandalByte/darkmatter-grub-theme;
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, grub-theme}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager}:
     let
       system = "x86_64-linux";
       pkgConfig = {
@@ -40,11 +35,11 @@
 
         specialArgs = {
           inherit self stable isDesktop;
+          grub-themes = pkgs.callPackage ./modules/grub_themes.nix {};
         };
 
         modules = [
           config
-          grub-theme.nixosModule
 
           home-manager.nixosModules.home-manager {
             home-manager.users.bruno = {

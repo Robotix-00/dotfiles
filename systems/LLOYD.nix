@@ -1,4 +1,4 @@
-{ pkgs, config, lib, self, isDesktop, ... }:
+{ pkgs, config, lib, self, isDesktop, grub-themes, ... }:
 {
   imports =
     [
@@ -31,12 +31,9 @@
       efiSupport = true;
       version = 2;
 
-      darkmatter-theme = {
-        enable = true;
-        style = "nixos";
-        icon = "color";
-        resolution = "1440p";
-      };
+      extraConfig = ''
+        set theme=${grub-themes.cyberpunk}
+      '';
 
       extraEntries = ''
         menuentry 'Windows' --class windows --class os $menuentry_id_option 'osprober-efi-293A-451F' {
