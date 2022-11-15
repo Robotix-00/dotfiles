@@ -2,7 +2,7 @@
 {
   imports = [
     ./packages.nix
-    ./editors/vim.nix
+    ./editors/vim
     ./docker.nix
     ./gpg.nix
 

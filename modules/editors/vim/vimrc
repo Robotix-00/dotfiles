@@ -1,0 +1,35 @@
+colorscheme gruvbox
+set background=dark
+highlight Normal guibg=none
+
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set termguicolors
+
+set guicursor=
+set number
+set relativenumber
+set foldmethod=marker
+set hidden
+set nowrap
+set scrolloff=8
+set cmdheight=2
+
+let mapleader = " "
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+augroup EDITOR
+    autocmd!
+    autocmd BufWritePre * :call TrimWhitespace()
+augroup END

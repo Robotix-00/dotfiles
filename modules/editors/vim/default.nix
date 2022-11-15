@@ -39,13 +39,7 @@ in
     defaultEditor = true;
 
     configure = {
-      customRC = ''
-        set termguicolors
-        set relativenumber
-        set foldmethod=marker
-
-        colorscheme nightfox
-      '';
+      customRC = builtins.readFile ./vimrc;
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
@@ -70,7 +64,7 @@ in
           syntastic
           rainbow
           lightline-vim
-          nightfox-nvim
+          gruvbox-nvim
         ] ++ [
           vim-better-comments
           vim-better-whitespace
