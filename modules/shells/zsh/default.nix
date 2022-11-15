@@ -16,4 +16,8 @@
       theme = "jbergantine";
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    fzf
+  ];
 }

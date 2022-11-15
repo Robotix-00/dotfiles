@@ -45,13 +45,13 @@ in
         start = [
           nerdtree          # file navigation
           telescope-nvim
-          # nvim-fzf          # file navigation
           vim-commentary
           indentLine
           vim-visual-multi  # multi line edits
 
           ale
           vim-autoformat
+          YouCompleteMe
 
           # language specific
           vim-nix
