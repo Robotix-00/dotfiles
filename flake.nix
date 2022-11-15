@@ -34,7 +34,8 @@
         config = pkgConfig;
       };
 
-      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}: nixpkgs.lib.nixosSystem {
+      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}:
+      nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {

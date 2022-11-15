@@ -42,13 +42,15 @@ in
       customRC = ''
         set termguicolors
         set relativenumber
+        set foldmethod=marker
 
-        setlocal foldmethod=marker
+        colorscheme nightfox
       '';
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           nerdtree          # file navigation
+          telescope-nvim
           # nvim-fzf          # file navigation
           vim-commentary
           indentLine
@@ -68,6 +70,7 @@ in
           syntastic
           rainbow
           lightline-vim
+          nightfox-nvim
         ] ++ [
           vim-better-comments
           vim-better-whitespace
