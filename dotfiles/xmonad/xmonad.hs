@@ -365,11 +365,11 @@ myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floati
 
 -- startup hook
 myStartupHook = do
-  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP-0 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off"
+  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --left-of HDMI-0 --rotate left --output DP-0 --off --output DP-1 --off"
   spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
-  spawn "feh ~/.dotfiles/assets/background --randomize --bg-scale"          -- background
+  spawn "feh ~/.dotfiles/assets/background --randomize --bg-fill"          -- background
 
 myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
   where
