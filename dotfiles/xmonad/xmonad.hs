@@ -45,7 +45,7 @@ import XMonad.Hooks.DynamicProperty
 import XMonad.Hooks.StatusBar
 
 import XMonad.Layout.Circle
-import XMonad.Layout.Grid (Grid(..))
+import qualified XMonad.Layout.GridVariants as GV
 import XMonad.Layout.NoFrillsDecoration(noFrillsDeco)
 import XMonad.Layout.Renamed
 import XMonad.Layout.Simplest
@@ -55,6 +55,7 @@ import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.PerScreen
 
 import XMonad.Util.EZConfig(mkNamedKeymap)    -- for a better keymap layout
 import XMonad.Util.NamedActions(NamedAction, (^++^), showKm, addName, noName, addDescrKeys', subtitle)
@@ -99,9 +100,6 @@ myApplications =
 ---------------------------------------------------------------------}}}
 ---main--------------------------------------------------------------{{{
 main = do
-  -- ! xmobar has to be started once before working properly; bodged it -> TODO
-  spawn "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs & sleep .2 && killall xmobar"
-
   xmonad
     . withNavigation2DConfig myNav2DConf
     . dynamicProjects projects
@@ -317,7 +315,7 @@ scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows)
-  (three ||| tall ||| spiralLayout ||| circle ||| full)
+  (main ||| full)
   where
     named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
 
@@ -325,34 +323,27 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows)
 
     mySpacing      = spacing 5
     tabbs          = addTabs shrinkText myTabConfig
-    sublayouts     = subLayout [] (Simplest ||| Circle)
 
-    -- Layouts
-    three = named "Three" $
-      addTopBar $
-        -- tabbs $ sublayouts $
-        mySpacing $
-          ThreeColMid 1 (3/100) (1/2)
+    main = named "Default" $
+            addTopBar $
+            tabbs $
+            subLayout [] (Simplest ||| Circle) $
+            mySpacing $
+                ifWider 1080 big small
+      where
+        big = three
+        small = Mirror three
 
-    tall = named "Tall" $
-      addTopBar $
-        tabbs $ sublayouts $
-          mySpacing $
-            Tall 1 (3/100) (1/2)
+        three = ThreeColMid 1 (3/100) (1/2)
+
+    -- tall = named "Tall" $
+    --   addTopBar $
+    --     tabbs $ sublayouts $
+    --       mySpacing $
+    --         Tall 1 (3/100) (1/2)
 
     full = named "Full" $
       Full
-
-    spiralLayout = named "Spiral" $
-      addTopBar $
-        mySpacing $
-          spiral (6/7)
-
-    circle = named "Circle" $
-      addTopBar $
-        mySpacing $
-          Circle
-
 
 ---------------------------------------------------------------------}}}
 ---hooks-------------------------------------------------------------{{{
