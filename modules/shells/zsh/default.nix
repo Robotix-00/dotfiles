@@ -12,12 +12,14 @@
 
     ohMyZsh = {
       enable = true;
-      plugins = [ "git" "man" "virtualenv" ];
+      plugins = [ "git" "man" "fzf" "thefuck" ];
       theme = "jbergantine";
     };
   };
 
   environment.systemPackages = with pkgs; [
     fzf
+    thefuck
+    zsh-z   # experimental
   ];
 }
