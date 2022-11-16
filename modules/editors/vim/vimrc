@@ -2,6 +2,8 @@ colorscheme gruvbox
 set background=dark
 highlight Normal guibg=none
 
+set noshowmode
+
 set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -17,12 +19,34 @@ set nowrap
 set scrolloff=8
 set cmdheight=2
 
+let g:lightline = {
+      \ 'active': {
+      \ 'left': [ [ 'mode', 'paste' ],
+      \           [ 'readonly', 'filename', 'modified', 'gitstatus' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitstatus': 'GitStatus',
+      \ },
+      \ }
+
+" git gutter
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
+endfunction
+
+" keybinds
 let mapleader = " "
+
+" telescope config
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+
+
+"
 fun! TrimWhitespace()
     let l:save = winsaveview()
     keeppatterns %s/\s\+$//e

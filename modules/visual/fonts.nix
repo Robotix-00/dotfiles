@@ -4,7 +4,7 @@
     enableDefaultFonts = true;
     fonts = with pkgs; [
       # (nerdfonts.override { fonts = ["Devicons"]; })
-      nerdfonts 
+      nerdfonts
       fira-code
       fira-code-symbols
     ];

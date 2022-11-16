@@ -377,7 +377,7 @@ myKeys' conf = let
   arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
   dirs      = [ D, U, L, R ]
 
-  screenKeys    = ["w", "e", "r"]
+  screenKeys    = ["e", "w", "r"]
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 

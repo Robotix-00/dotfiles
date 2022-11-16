@@ -11,16 +11,6 @@ let
     };
   };
 
-  vim-better-comments = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-better-comments";
-    src = pkgs.fetchFromGitHub {
-      owner = "jbgutierrez";
-      repo = "vim-better-comments";
-      rev = "39f92579dd0ffb6e199e398f590aeb1480e96558";
-      sha256 = "sha256-R6XcT9ygBnAHjnybjxkabna8x9W1LJJN1DzwzqteQo0=";
-    };
-  };
-
   vim-hexedit = pkgs.vimUtils.buildVimPlugin {
     name = "vim-hexedit";
     src = pkgs.fetchFromGitHub {
@@ -44,35 +34,31 @@ in
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           nerdtree          # file navigation
-          telescope-nvim
-          vim-commentary
-          indentLine
+          telescope-nvim    # file fuzzy finding
+          vim-commentary    # comment shortcuts
+          indentLine        # shows lines for indent scopes
           vim-visual-multi  # multi line edits
 
-          ale
-          vim-autoformat
-          YouCompleteMe
+          # generic coding
+          YouCompleteMe     # code completion engine
+          syntastic         # syntax highlighting
+          vim-gitgutter     # shows git changes
 
           # language specific
-          vim-nix
-          vim-polyglot
-          vim-markdown
-          markdown-preview-nvim
+          vim-nix           # nix support
+          vim-polyglot      # multilingual support
+          markdown-preview-nvim # markdown previewer
 
           # visual
-          vim-devicons
-          syntastic
-          rainbow
-          lightline-vim
-          gruvbox-nvim
+          vim-devicons      # icons for nerdtree
+          lightline-vim     # status bar
+          gruvbox-nvim      # theme
         ] ++ [
-          vim-better-comments
-          vim-better-whitespace
-          vim-hexedit
+          vim-better-whitespace   # shows tailing whitespaces
+          vim-hexedit             # edit file in hex mode
         ];
 
         opt = [
-          vim-gitgutter
         ];
       };
     };
