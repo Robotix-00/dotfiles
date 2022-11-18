@@ -1,4 +1,5 @@
 # My dotfiles
+! These dotfiles are currently being developed. They likely will change dramatically!
 
 ## Features
 - NixOS configuration
