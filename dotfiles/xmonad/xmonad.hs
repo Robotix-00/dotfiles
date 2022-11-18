@@ -94,7 +94,6 @@ myApplications =
   , ("LibreOffice", "libreoffice", "writing and stuff")
   , ("Gimp", "gimp", "painting'n'shit")
   , ("Joplin", "joplin-desktop", "Notes")
-  , ("Productivity", "super-productivity", "TODOs")
   ]
 
 ---------------------------------------------------------------------}}}
@@ -309,7 +308,6 @@ myTreeNavigation = M.fromList
 ---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
-              , NS "productivity" "super-productivity" (className =? "superProductivity") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
@@ -331,10 +329,10 @@ myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows)
             mySpacing $
                 ifWider 1080 big small
       where
-        big = three
-        small = Mirror three
+        big = ThreeColMid 1 (3/100) (1/2)
+        -- small = Mirror big
 
-        three = ThreeColMid 1 (3/100) (1/2)
+        small = Mirror (GV.TallGrid 1 1 (1/2) 1 (3/100))
 
     -- tall = named "Tall" $
     --   addTopBar $
@@ -356,7 +354,7 @@ myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floati
 
 -- startup hook
 myStartupHook = do
-  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 3840x0 --left-of HDMI-0 --rotate left --output DP-0 --off --output DP-1 --off"
+  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1080x840 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate left --output DP-0 --off --output DP-1 --off"
   spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
@@ -377,11 +375,11 @@ myKeys' conf = let
   arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
   dirs      = [ D, U, L, R ]
 
-  screenKeys    = ["e", "w", "r"]
+  screenKeys    = ["w", "e", "r"]
   wsKeys        = map show $ [1..9] ++ [0]
   modm          = mod4Mask
 
-  scratchpadNames   = ["spotify", "productivity", "discord"]
+  scratchpadNames   = ["spotify", "discord"]
   scratchpadKeys    = ["j", "k", "l"]
 
 
@@ -411,7 +409,6 @@ myKeys' conf = let
   subKeys "Actions"
   [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
   , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
-  , ("M-S-f"          , addName "spawns browser with nopersonal profile" $ spawn "firefox --profile .mozilla/firefox/v10tpbwa.NoPersonal")
   , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 

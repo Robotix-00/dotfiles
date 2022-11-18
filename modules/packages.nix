@@ -1,4 +1,4 @@
-{ pkgs, lib, isDesktop, ... }:
+{ pkgs, stable, lib, isDesktop, ... }:
 {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -73,11 +73,10 @@
 
     # GUI tools
     firefox
-    brave
+    stable.brave
 
     discord
     spotify
-    super-productivity
   ];
 
   hardware.opengl.driSupport32Bit = true;
