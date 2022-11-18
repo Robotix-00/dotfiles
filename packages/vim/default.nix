@@ -20,6 +20,16 @@ let
       sha256 = "sha256-tniUeTt9odzHHFTIcPPbVstnQMBcHvWA1FMrr9vj/TA=";
     };
   };
+
+  vimbegood = pkgs.vimUtils.buildVimPlugin {
+    name = "vimbegood";
+    src = pkgs.fetchFromGitHub {
+      owner = "ThePrimeagen";
+      repo = "vim-be-good";
+      rev = "c290810728a4f75e334b07dc0f3a4cdea908d351";
+      sha256 = "sha256-lJNY/5dONZLkxSEegrwtZ6PHYsgMD3nZkbxm6fFq3vY=";
+    };
+  };
 in
 {
   environment.variables = { EDITOR = "vim"; };
@@ -43,6 +53,8 @@ in
           vim-tmux-navigator
           nvim-treesitter
           nvim-treesitter-context
+
+          vimbegood
 
           # generic coding
           YouCompleteMe     # code completion engine

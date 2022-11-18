@@ -1,17 +1,14 @@
 { pkgs, lib, isDesktop, ... }:
 {
   imports = [
-    ./packages.nix
-    ./editors/vim
+    ./../packages
     ./docker.nix
     ./gpg.nix
 
-    ./shells
   ] ++ lib.optionals isDesktop [
     ./audio.nix
 
-    ./visual/desktop.nix
-    ./visual/fonts.nix
+    ./desktop
   ];
 
   nix = {

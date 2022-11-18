@@ -72,7 +72,7 @@ import qualified XMonad.StackSet as W
 ---constants---------------------------------------------------------{{{
 myTerminal  = "kitty"
 myBrowser = "firefox"
-myStatusbar = "sleep 1 && xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
+myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
 myMenu    = "dmenu_run"
 myFont    = "xft:FiraCode-16"
 

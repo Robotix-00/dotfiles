@@ -1,0 +1,6 @@
+bindkey '^f'   backward-word
+bindkey '^b'   forward-word
+bindkey '^e'   clear-screen
+bindkey -s ^f "tmux-sessionizer\n"
+
+eval $(thefuck --alias)

@@ -1,5 +1,12 @@
 { pkgs, ... }:
 {
+  environment.systemPackages = [
+    (pkgs.writeShellScriptBin
+      "tmux-sessionizer"
+      (builtins.readFile ./tmux-sessionizer)
+    )
+  ];
+
   programs.tmux = {
     enable = true;
     baseIndex = 1;
@@ -12,6 +19,7 @@
       nord      # theme
       tmux-fzf  # fuzzy finder
       vim-tmux-navigator
+      resurrect
     ];
   };
 }

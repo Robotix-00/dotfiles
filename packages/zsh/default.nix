@@ -19,6 +19,7 @@
 
   environment.systemPackages = with pkgs; [
     fzf
+    zsh-fzf-tab
     thefuck
     zsh-z   # experimental
   ];

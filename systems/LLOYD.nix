@@ -10,11 +10,8 @@
 
       ./../modules/hardware/wifi/rtl8821au.nix
       ./../modules/hardware/wifi/rtl8812au.nix
-
-      ./../modules/shells/tmux.nix
-      ./../modules/shells/fish.nix
     ] ++ lib.optionals isDesktop [
-      ./../modules/editors/vscode.nix
+      ./../packages/vscode
     ];
 
   # Bootloader

@@ -1,5 +1,14 @@
 { pkgs, stable, lib, isDesktop, ... }:
 {
+  imports = [
+    ./zsh
+    ./vim
+    ./kitty
+
+    ./tmux
+    ./ranger
+  ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
