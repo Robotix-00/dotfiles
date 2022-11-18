@@ -22,12 +22,21 @@ set cmdheight=2
 let g:lightline = {
       \ 'active': {
       \ 'left': [ [ 'mode', 'paste' ],
-      \           [ 'readonly', 'filename', 'modified', 'gitstatus' ] ]
+      \           [ 'readonly', 'filename', 'modified', 'gitstatus' ],
+      \           [ 'syntastic'  ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
       \   'gitstatus': 'GitStatus',
+      \   'syntastic': 'SyntasticStatuslineFlag',
       \ },
       \ }
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 " git gutter
 function! GitStatus()

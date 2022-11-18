@@ -22,6 +22,8 @@ let
   };
 in
 {
+  environment.variables = { EDITOR = "vim"; };
+
   programs.neovim = {
     enable = true;
     vimAlias = true;
@@ -38,6 +40,9 @@ in
           vim-commentary    # comment shortcuts
           indentLine        # shows lines for indent scopes
           vim-visual-multi  # multi line edits
+          vim-tmux-navigator
+          nvim-treesitter
+          nvim-treesitter-context
 
           # generic coding
           YouCompleteMe     # code completion engine
@@ -63,4 +68,7 @@ in
       };
     };
   };
+  environment.systemPackages = with pkgs; [
+    pylint
+  ];
 }
