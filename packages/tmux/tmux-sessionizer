@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # stolen from ThePrimeagen's dotfiles and adapted
 
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$({ echo "~/.dotfiles" &
+    selected=$({ echo "$HOME/.dotfiles" &
                  find ~/Data/projects \
                       ~/Data/projects/EXPERMIENTS \
                       -mindepth 1 -maxdepth 1 -type d;
-                } | fzf)
+                  } | (fzf-tmux -p || fzf) )
 fi
 
 if [[ -z $selected ]]; then
@@ -26,13 +26,12 @@ fi
 
 if ! tmux has-session -t=$selected_name 2> /dev/null; then
     tmux new-session -ds $selected_name -c $selected
+fi
+
+if [[ -z $TMUX ]]; then
     tmux attach -t $selected_name
 else
-    if [[ -z $TMUX ]]; then
-        tmux attach -t $selected_name
-    else
-        tmux switch-client -t $selected_name
-    fi
+    tmux switch-client -t $selected_name
 fi
 
 
