@@ -19,6 +19,7 @@ set nowrap
 set scrolloff=8
 set cmdheight=2
 
+" statusline config
 let g:lightline = {
       \ 'active': {
       \ 'left': [ [ 'mode', 'paste' ],
@@ -33,16 +34,25 @@ let g:lightline = {
       \ },
       \ }
 
+"" git gutter
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
+endfunction
+
+
+" syntastic config
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" git gutter
-function! GitStatus()
-  let [a,m,r] = GitGutterGetHunkSummary()
-  return printf('+%d ~%d -%d', a, m, r)
-endfunction
+" nerdtree
+nnoremap <C-t> <cmd>NERDTreeToggle<cr>
+
+"" to make vim-tmux-navigator work with nerdtree
+let g:NERDTreeMapJumpPrevSibling=""
+let g:NERDTreeMapJumpNextSibling=""
 
 " keybinds
 let mapleader = " "
@@ -52,8 +62,6 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-
-
 
 "
 fun! TrimWhitespace()

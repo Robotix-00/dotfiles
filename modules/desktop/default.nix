@@ -2,6 +2,7 @@
 {
   imports = [
     ./xmonad
+    ./fonts.nix
   ];
 
   services = {
