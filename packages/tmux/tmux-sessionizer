@@ -8,8 +8,9 @@ else
     selected=$({ echo "$HOME/.dotfiles" &
                  find ~/Data/projects \
                       ~/Data/projects/EXPERMIENTS \
+                      ~/tests \
                       -mindepth 1 -maxdepth 1 -type d;
-                  } | (fzf-tmux -p || fzf) )
+                  } | fzf-tmux -p)
 fi
 
 if [[ -z $selected ]]; then

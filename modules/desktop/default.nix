@@ -1,8 +1,8 @@
 { pkgs, self, ...}:
 {
   imports = [
-    ./xmonad
     ./fonts.nix
+    ./xmonad
   ];
 
   services = {

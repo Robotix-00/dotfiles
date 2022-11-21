@@ -17,10 +17,8 @@
 
     plugins = with pkgs.tmuxPlugins; [
       nord      # theme
-      tmux-fzf  # fuzzy finder
+      tmux-fzf  # fuzzy finder used by tmux sessionizer
       vim-tmux-navigator
-      resurrect
     ];
   };
 }
-

@@ -21,6 +21,5 @@
     fzf
     zsh-fzf-tab
     thefuck
-    zsh-z   # experimental
   ];
 }
