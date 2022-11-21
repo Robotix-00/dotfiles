@@ -30,6 +30,11 @@ let
       sha256 = "sha256-lJNY/5dONZLkxSEegrwtZ6PHYsgMD3nZkbxm6fFq3vY=";
     };
   };
+
+  myConfig = pkgs.vimUtils.buildVimPlugin {
+    name = "my-config";
+    src = ./nvim;
+  };
 in
 {
   environment.variables = { EDITOR = "vim"; };
@@ -41,10 +46,13 @@ in
     defaultEditor = true;
 
     configure = {
-      customRC = builtins.readFile ./vimrc;
+      customRC = ''
+        lua require("robotix")
+      '' + builtins.readFile ./vimrc;
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
+          myConfig          # TODO
           nerdtree          # file navigation
           telescope-nvim    # file fuzzy finding
           vim-commentary    # comment shortcuts
@@ -58,7 +66,9 @@ in
 
           # generic coding
           YouCompleteMe     # code completion engine
-          syntastic         # syntax highlighting
+          # nvim-cmp # TODO https://github.com/hrsh7th/nvim-cmp
+
+          # syntastic         # syntax highlighting
           vim-gitgutter     # shows git changes
 
           # language specific

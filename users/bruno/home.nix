@@ -19,6 +19,10 @@
   programs = {
     home-manager.enable = true;
 
+    # stupid that i have to do this in home manager
+    neovim.plugins = [
+      pkgs.nvim-treesitter.withAllGrammars
+    ];
 
     git = {
       enable = true;

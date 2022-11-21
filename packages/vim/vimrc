@@ -2,22 +2,22 @@ colorscheme gruvbox
 set background=dark
 highlight Normal guibg=none
 
-set noshowmode
+" set noshowmode
 
-set tabstop=4 softtabstop=4
-set shiftwidth=4
-set expandtab
-set smartindent
-set termguicolors
+" set tabstop=4 softtabstop=4
+" set shiftwidth=4
+" set expandtab
+" set smartindent
+" set termguicolors
 
-set guicursor=
-set number
-set relativenumber
-set foldmethod=marker
-set hidden
-set nowrap
-set scrolloff=8
-set cmdheight=2
+" set guicursor=
+" set number
+" set relativenumber
+" set foldmethod=marker
+" set hidden
+" set nowrap
+" set scrolloff=8
+" set cmdheight=2
 
 " statusline config
 let g:lightline = {
