@@ -1,4 +1,4 @@
-{ pkgs, self, ... }:
+{ pkgs, stable, self, ... }:
 {
  # desktop/display/login
   services = {
@@ -17,7 +17,7 @@
    environment.systemPackages = with pkgs; [
     dmenu       # search menu
     feh         # background and images
-    xmobar      # task bar
+    stable.xmobar      # task bar
     pstree      # so window swallowing works for xmonad
     gnome.zenity# text displaying for keybinds
   ];

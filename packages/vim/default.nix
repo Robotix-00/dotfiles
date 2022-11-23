@@ -1,15 +1,15 @@
-{ pkgs, lib, ... }:
+{ pkgs, stable, lib, ... }:
 let
   # nixpks version doesn't work, use manual
-  vim-better-whitespace = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-better-whitespace";
-    src = pkgs.fetchFromGitHub {
-      owner = "ntpeters";
-      repo = "vim-better-whitespace";
-      rev = "1b22dc57a2751c7afbc6025a7da39b7c22db635d";
-      sha256 = "10l01a8xaivz6n01x6hzfx7gd0igd0wcf9ril0sllqzbq7yx2bbk";
-    };
-  };
+  # vim-better-whitespace = pkgs.vimUtils.buildVimPlugin {
+  #   name = "vim-better-whitespace";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "ntpeters";
+  #     repo = "vim-better-whitespace";
+  #     rev = "1b22dc57a2751c7afbc6025a7da39b7c22db635d";
+  #     sha256 = "10l01a8xaivz6n01x6hzfx7gd0igd0wcf9ril0sllqzbq7yx2bbk";
+  #   };
+  # };
 
   vim-hexedit = pkgs.vimUtils.buildVimPlugin {
     name = "vim-hexedit";
@@ -60,6 +60,7 @@ in
           vim-visual-multi  # multi line edits
           vim-tmux-navigator
           vim-surround      # surround word with characters #TODO
+          # vim-better-whitespace #BROKEN shows tailing whitespaces
 
           nvim-treesitter
           nvim-treesitter-context
@@ -70,6 +71,7 @@ in
           nvim-cmp
           cmp-buffer
           cmp-path
+          cmp-nvim-lsp
           luasnip
           cmp_luasnip
           friendly-snippets
@@ -96,16 +98,20 @@ in
           lightline-vim     # status bar
           gruvbox-nvim      # theme
         ] ++ [
-          vim-better-whitespace   # shows tailing whitespaces
-          vim-hexedit             # edit file in hex mode
+          # vim-better-whitespace   # shows tailing whitespaces
         ];
 
         opt = [
+          vim-hexedit             # edit file in hex mode
         ];
       };
     };
   };
   environment.systemPackages = with pkgs; [
+    # lsp servers
     pylint
+    rnix-lsp
+    haskell-language-server
+    rust-analyzer
   ];
 }
