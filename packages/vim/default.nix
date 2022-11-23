@@ -59,17 +59,32 @@ in
           indentLine        # shows lines for indent scopes
           vim-visual-multi  # multi line edits
           vim-tmux-navigator
+          vim-surround      # surround word with characters #TODO
+
           nvim-treesitter
           nvim-treesitter-context
 
           vimbegood
 
-          # generic coding
-          YouCompleteMe     # code completion engine
-          # nvim-cmp # TODO https://github.com/hrsh7th/nvim-cmp
+          # code completion
+          nvim-cmp
+          cmp-buffer
+          cmp-path
+          luasnip
+          cmp_luasnip
+          friendly-snippets
+          lspkind-nvim
 
-          # syntastic         # syntax highlighting
+          # lsp
+          nvim-lspconfig    # TODO
+
+          # formatting & linting
+          # null-ls-nvim    # TODO
+          syntastic         # syntax highlighting
+
+          # git integration
           vim-gitgutter     # shows git changes
+          vim-fugitive
 
           # language specific
           vim-nix           # nix support

@@ -1,67 +1,10 @@
-colorscheme gruvbox
-set background=dark
 highlight Normal guibg=none
-
-" set noshowmode
-
-" set tabstop=4 softtabstop=4
-" set shiftwidth=4
-" set expandtab
-" set smartindent
-" set termguicolors
-
-" set guicursor=
-" set number
-" set relativenumber
-" set foldmethod=marker
-" set hidden
-" set nowrap
-" set scrolloff=8
-" set cmdheight=2
-
-" statusline config
-let g:lightline = {
-      \ 'active': {
-      \ 'left': [ [ 'mode', 'paste' ],
-      \           [ 'readonly', 'filename', 'modified', 'gitstatus' ],
-      \           [ 'syntastic'  ] ],
-      \   'right': [ [ 'lineinfo' ],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitstatus': 'GitStatus',
-      \   'syntastic': 'SyntasticStatuslineFlag',
-      \ },
-      \ }
-
-"" git gutter
-function! GitStatus()
-  let [a,m,r] = GitGutterGetHunkSummary()
-  return printf('+%d ~%d -%d', a, m, r)
-endfunction
-
 
 " syntastic config
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-
-" nerdtree
-nnoremap <C-t> <cmd>NERDTreeToggle<cr>
-
-"" to make vim-tmux-navigator work with nerdtree
-let g:NERDTreeMapJumpPrevSibling=""
-let g:NERDTreeMapJumpNextSibling=""
-
-" keybinds
-let mapleader = " "
-
-" telescope config
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 "
 fun! TrimWhitespace()

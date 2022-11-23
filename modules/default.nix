@@ -25,8 +25,6 @@
       isNormalUser = true;
       description = "bruno";
       extraGroups = [ "audio" "networkmanager" "wheel" "docker" ];
-      packages = with pkgs; [
-      ];
     };
   };
 
