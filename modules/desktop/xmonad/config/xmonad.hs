@@ -205,8 +205,6 @@ projects = [ Project { projectName  = wsGEN
   , Project { projectName  = wsDEV
   , projectDirectory = "~/"
   , projectStartHook = Just $ do spawnOn wsDEV myTerminal
-                                 spawnOn wsDEV myTerminal
-                                 spawnOn wsDEV myTerminal
             }
   , Project { projectName  = wsWEB
   , projectDirectory = "~/"

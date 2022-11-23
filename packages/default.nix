@@ -22,6 +22,7 @@
     tldr          # similar to man-pages
     cheat
     neofetch
+    ipfetch
 
     #network util
     wirelesstools
