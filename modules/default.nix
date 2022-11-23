@@ -4,6 +4,7 @@
     ./../packages
     ./docker.nix
     ./gpg.nix
+    ./ssh.nix
 
   ] ++ lib.optionals isDesktop [
     ./audio.nix
