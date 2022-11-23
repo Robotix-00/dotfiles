@@ -87,7 +87,7 @@
     ];
 
   # mount mass storage drive in user space
-  fileSystems."/home/bruno/Data" = {
+  fileSystems."/home/bruno/projects" = {
     device = "dev/disk/by-label/Data";
     fsType = "ext4";
   };
