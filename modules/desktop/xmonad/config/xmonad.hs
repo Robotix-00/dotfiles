@@ -259,7 +259,7 @@ treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
    [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "shutdown 0"))
            [ Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "reboot")) []
-           , Node (TS.TSNode "Lock screen" "Locks the screen" (spawn "xscreensaver-command -lock")) []
+           , Node (TS.TSNode "Lock screen" "Locks the screen" (spawn "xdg-screensaver lock")) []
            , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
            , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
            ]
