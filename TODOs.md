@@ -6,5 +6,6 @@
     - alsa mixer not working in stable
 
 ## Tasks
-- vim
+- [ ] vim
     - [ ] lsp config
+- [ ] xmonad add multiple level of application tree select
