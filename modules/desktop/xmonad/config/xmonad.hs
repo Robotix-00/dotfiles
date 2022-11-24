@@ -264,7 +264,12 @@ treeselectAction a = TS.treeselectAction a
            , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
            ]
    , Node (TS.TSNode "Applications" "My Applications" (return ())) treeApplications
-   , Node (TS.TSNode "NixOS Utility" "work in progress" (return ())) []       --TODO
+   , Node (TS.TSNode "NixOS Utility" "utility commands to manage nixos" (return ()))
+          [ Node (TS.TSNode "update" "update nixos system" (spawn "kitty --hold sudo nixos-rebuild switch --flake $DOTFILES")) []
+          , Node (TS.TSNode "cleanup/optimize" "delete old generations & optimize store" (spawn "kitty --hold sudo nix-collect-garbage -d && nix store optimise")) []
+          -- , Node (TS.TSNode "" "" ()) []
+          -- , Node (TS.TSNode "" "" ()) []
+          ]
    ]
    where
      treeApplications = map (\(a, b, c) -> (Node (TS.TSNode a c (spawn b)) [])) myApplications
