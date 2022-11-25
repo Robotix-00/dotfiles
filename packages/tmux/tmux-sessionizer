@@ -5,12 +5,8 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$({ echo "$HOME/.dotfiles" &
-                 find ~/projects \
-                      ~/projects/EXPERMIENTS \
-                      ~/tests \
-                      -mindepth 1 -maxdepth 1 -type d;
-                  } | fzf-tmux -p)
+    # uses file in home-dir to recursively define all project dirs (WIP)
+    selected="$HOME/$(~/.projects.sh | cut -d "/" -f4- | fzf-tmux -p)"
 fi
 
 if [[ -z $selected ]]; then
