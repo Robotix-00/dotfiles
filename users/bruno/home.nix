@@ -54,9 +54,9 @@
     };
 
     # doesn't work
-    # cursorTheme = {
-    #   name = "Capitaine-cursors";
-    #   package = pkgs.capitaine-cursors;
-    # };
+    cursorTheme = {
+      name = "Capitaine-cursors";
+      package = pkgs.capitaine-cursors;
+    };
   };
 }

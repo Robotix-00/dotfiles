@@ -2,6 +2,7 @@
 {
   imports = [
     ./../packages
+    ./virtualisation.nix
     ./docker.nix
     ./gpg.nix
     ./ssh.nix
