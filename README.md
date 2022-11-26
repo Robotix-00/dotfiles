@@ -5,7 +5,7 @@
 - NixOS configuration
 	- multi-system setup (with currently only one: **LLOYD**)
 	- HomeManager configuration in users/
-- [XMonad configuration](./dotfiles/xmonad/xmonad.hs), also see [XMonad Feature](#xmonad-features)
+- [XMonad configuration](modules/desktop/xmonad/config/xmonad.hs), also see [XMonad Feature](#xmonad-features)
 
 ## XMonad Features (WIP)
 look yourself, i dont even know myself
