@@ -99,6 +99,9 @@ myApplications =
 ---------------------------------------------------------------------}}}
 ---main--------------------------------------------------------------{{{
 main = do
+  -- trying to fix hibernation problems by having that here
+  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1080x840 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate left --output DP-0 --off --output DP-1 --off"
+
   xmonad
     . withNavigation2DConfig myNav2DConf
     . dynamicProjects projects
@@ -257,8 +260,9 @@ myGridColorizer = colorRangeFromClassName
 ---treeselect--------------------------------------------------------{{{
 treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
-   [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "shutdown 0"))
-           [ Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "reboot")) []
+   [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "systemctl hibernate"))
+           [ Node (TS.TSNode "Poweroff"   "Shuts down the system"  (spawn "poweroff")) []
+           , Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "poweroff --reboot")) []
            , Node (TS.TSNode "Lock screen" "Locks the screen" (spawn "xscreensaver-command -lock")) []
            , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
            , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
@@ -357,7 +361,6 @@ myEventHook = dynamicPropertyChange "WM_NAME" (className =? "Spotify" --> floati
 
 -- startup hook
 myStartupHook = do
-  spawn "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1080x840 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate left --output DP-0 --off --output DP-1 --off"
   spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
