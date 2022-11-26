@@ -33,7 +33,7 @@
   environment.systemPackages = [
     (pkgs.writeShellScriptBin
       "update"
-      (builtins.readFile ./update.sh)
+      (builtins.readFile ./../update.sh)
     )
   ];
 
