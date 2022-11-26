@@ -3,7 +3,6 @@
   programs.zsh = {
     enable = true;
     shellAliases = {
-      update = "/home/bruno/.dotfiles/update.sh";
       open = "xdg-open";
       ssh = "TERM=xterm-256color ssh";
     };

@@ -29,9 +29,12 @@
     };
   };
 
-  environment.sessionVariables = rec {
-    DOTFILES  = "/home/bruno/.dotfiles";
-  };
+  environment.systemPackages = [
+    (pkgs.writeShellScriptBin
+      "update"
+      (builtins.readFile ./update.sh)
+    )
+  ];
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";

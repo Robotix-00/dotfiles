@@ -8,7 +8,7 @@ fi
 
 {
     # i just want to edit my dotfiles, leave me allone
-    echo "$DOTFILES" &
+    echo "/etc/nixos/" &
 
     # find all sub-directories
     find $baseDir -maxdepth 1 -mindepth 1 -type d &
