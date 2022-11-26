@@ -24,6 +24,7 @@
     users.bruno = {
       isNormalUser = true;
       description = "bruno";
+      initialPassword = "passwordo";
       extraGroups = [ "audio" "networkmanager" "wheel" "docker" ];
     };
   };
@@ -34,7 +35,7 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
- 
+
  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.utf8";
   i18n.extraLocaleSettings = {
