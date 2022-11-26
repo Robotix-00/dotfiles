@@ -3,7 +3,11 @@
   environment.systemPackages = [
     (pkgs.writeShellScriptBin
       "tmux-sessionizer"
-      (builtins.readFile ./tmux-sessionizer)
+      (builtins.readFile ./tmux-sessionizer.sh)
+    )
+    (pkgs.writeShellScriptBin
+      "project-finder"
+      (builtins.readFile ./project-finder.sh)
     )
   ];
 

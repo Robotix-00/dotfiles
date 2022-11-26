@@ -1,12 +1,9 @@
-#!/usr/bin/env sh
-
 # stolen from ThePrimeagen's dotfiles and adapted
 
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    # uses file in home-dir to recursively define all project dirs (WIP)
-    selected="$HOME/$(~/.projects.sh | cut -d "/" -f4- | fzf-tmux -p)"
+    selected=$(project-finder "$HOME/projects" | fzf-tmux -p)
 fi
 
 if [[ -z $selected ]]; then

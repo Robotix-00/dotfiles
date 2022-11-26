@@ -12,4 +12,5 @@
     - [ ] lsp config
 - [ ] xmonad add multiple level of application tree select
 - [ ] make app to create project tree to fzf over
-    - .projdir file in every directory (marks it as directory, and maybe points to others)
+    - [ ] add .dotfiles back to the finder, maybe config in .projectDir
+    - [x] .projdir file in every directory (marks it as directory, and maybe points to others)
