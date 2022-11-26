@@ -7,6 +7,9 @@ else
 fi
 
 {
+    # i just want to edit my dotfiles, leave me allone
+    echo "$DOTFILES" &
+
     # find all sub-directories
     find $baseDir -maxdepth 1 -mindepth 1 -type d &
 

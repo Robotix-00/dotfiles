@@ -5,7 +5,7 @@ vim.keymap.set("n", "<leader>nh", ":nohl<CR>") -- clear search results
 vim.keymap.set("n", "x", '"_x') -- dont copy deleted character into register
 
 vim.keymap.set("n", "<leader>sv", "<C-w>v") -- split vertically
-vim.keymap.set("n", "<leader>sh", "<C-w>h") -- split horizonally
+vim.keymap.set("n", "<leader>sh", "<C-w>s") -- split horizonally
 vim.keymap.set("n", "<leader>se", "<C-w>=") -- split resize
 vim.keymap.set("n", "<leader>sx", ":close<CR>") -- close current split
 
@@ -27,4 +27,3 @@ vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>")
 vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
 
--- plugins - NERDTree

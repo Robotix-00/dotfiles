@@ -370,7 +370,7 @@ myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
   where
   manageAll = composeAll
       [ className =? "MPlayer"        --> doFloat
-      , className =? "Soffice"        --> doFloat
+      -- , className =? "Soffice"        --> doFloat
       , resource  =? "desktop_window" --> doIgnore
       , resource  =? "kdesktop"       --> doIgnore ]
 
