@@ -1,4 +1,12 @@
 { pkgs, config, ... }:
+let
+  nordzyCursors = pkgs.fetchFromGitHub {
+    owner = "alvatip";
+    repo = "Nordzy-cursors";
+    rev = "2afc440070703da0c77ad9b0b13fd2701dbda1df";
+    sha256 = "sha256-MRNtxaFg0oLoWGo7WJGfnEPcj2bUQg3rAD1ZisyyZpg=";
+  };
+in
 {
   home = {
     username = "bruno";
@@ -13,6 +21,9 @@
       ".config/kitty/".source = ./../../packages/kitty/config;
       ".tmux.conf".source = ./../../packages/tmux/tmux.conf;
       ".zshrc".source = ./../../packages/zsh/zshrc;
+
+      # cursor
+      ".icons/default".source = "${nordzyCursors}/Nordzy-cursors";
     };
   };
 
@@ -51,12 +62,6 @@
     theme = {
       name = "SolArc-Dark";
       package = pkgs.solarc-gtk-theme;
-    };
-
-    # doesn't work
-    cursorTheme = {
-      name = "Capitaine-cursors";
-      package = pkgs.capitaine-cursors;
     };
   };
 }

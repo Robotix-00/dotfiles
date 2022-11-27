@@ -364,7 +364,7 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   setWMName "LG3D"                        -- for java applications work
   spawn "setxkbmap -layout de"            -- keyboard layout
-  spawn "feh ~/.dotfiles/assets/background --randomize --bg-fill"          -- background
+  spawn "refresh-background"          -- background
 
 myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
   where

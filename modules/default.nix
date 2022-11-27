@@ -2,6 +2,7 @@
 {
   imports = [
     ./../packages
+    ./../assets
     ./virtualisation.nix
     ./docker.nix
     ./gpg.nix

@@ -11,7 +11,7 @@
 ## Tasks
 - [ ] vim
     - [ ] lsp config
-- [ ] make assets a nix module (so the system doeasnt rely on the config beeing somewhere other then the store)
+- [x] make assets a nix module (so the system doeasnt rely on the config beeing somewhere other then the store)
 - [ ] xmonad add multiple level of application tree select
 - [ ] make app to create project tree to fzf over
     - [x] add .dotfiles back to the finder

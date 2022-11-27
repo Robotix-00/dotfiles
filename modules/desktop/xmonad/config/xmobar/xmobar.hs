@@ -9,7 +9,7 @@ Config {
 
   sepChar = "%",
   alignSep = "}{",
-  template = "<box type=Bottom width=2 mb=2 color=#268bd2>%XMonadLog%</box> | %multicpu% <box type=Bottom width=2 mb=2 color=#268bd2>%coretemp%</box> | <box type=Bottom width=2 mb=2 color=#268bd2>%memory% + %swap%</box> | <box type=Bottom width=2 mb=2 color=#268bd2>%dynnetwork%</box> }{<action=`sh .config/xmonad/xmobar/refreshBackground.sh`>[~]</action> %uptime% %alsa:default:Master% <fc=#ee9a00>%date%</fc> <box type=Bottom width=2 mb=2 color=#268bd2>%uname%</box> ",
+  template = "<box type=Bottom width=2 mb=2 color=#268bd2>%XMonadLog%</box> | %multicpu% <box type=Bottom width=2 mb=2 color=#268bd2>%coretemp%</box> | <box type=Bottom width=2 mb=2 color=#268bd2>%memory% + %swap%</box> | <box type=Bottom width=2 mb=2 color=#268bd2>%dynnetwork%</box> }{<action=`refresh-background`>[~]</action> %uptime% %alsa:default:Master% <fc=#ee9a00>%date%</fc> <box type=Bottom width=2 mb=2 color=#268bd2>%uname%</box> ",
 
   commands =
     [ Run DynNetwork

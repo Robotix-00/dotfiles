@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
+# i propably dont need this script, but maybe i'll extend functionality someday
 
-sudo nixos-rebuild switch --flake /etc/nixos/
+sudo nixos-rebuild switch
