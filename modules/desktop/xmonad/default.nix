@@ -17,7 +17,7 @@
    environment.systemPackages = with pkgs; [
     dmenu       # search menu
     feh         # background and images
-    stable.xmobar      # task bar
+    xmobar      # task bar
     pstree      # so window swallowing works for xmonad
     gnome.zenity# text displaying for keybinds
   ];

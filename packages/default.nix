@@ -43,7 +43,7 @@
     odt2txt pandoc ueberzug poppler_utils # ranger util
 
     ripgrep
-    peco
+    stable.peco
 
     # processes
     htop
