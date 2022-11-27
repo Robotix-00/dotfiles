@@ -261,8 +261,8 @@ myGridColorizer = colorRangeFromClassName
 treeselectAction :: TS.TSConfig (X ()) -> X ()
 treeselectAction a = TS.treeselectAction a
    [ Node (TS.TSNode "Power" "Shutdown, etc." (spawn "systemctl hibernate"))
-           [ Node (TS.TSNode "Poweroff"   "Shuts down the system"  (spawn "poweroff")) []
-           , Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "poweroff --reboot")) []
+           [ Node (TS.TSNode "Reboot"   "Reboots the system"  (spawn "poweroff --reboot")) []
+           , Node (TS.TSNode "Poweroff"   "Shuts down the system"  (spawn "poweroff")) []
            , Node (TS.TSNode "Lock screen" "Locks the screen" (spawn "xscreensaver-command -lock")) []
            , Node (TS.TSNode "Suspend" "Suspends the system" (spawn "systemctl suspend")) []
            , Node (TS.TSNode "Hibernate" "Puts the system inti hibernation" (spawn "systemctl hibernate")) []
