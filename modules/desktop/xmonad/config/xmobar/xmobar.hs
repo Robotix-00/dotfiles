@@ -1,5 +1,5 @@
 Config {
-  font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true",
+  font = "xft:Fira Code:size=10:bold",
   additionalFonts = [ "xft:Hack Nerd Font Mono:size=15:bold"
                     ]
 

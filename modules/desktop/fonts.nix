@@ -7,7 +7,6 @@
       nerdfonts
       fira-code
       fira-code-symbols
-      ttf_bitstream_vera
     ];
 
     fontconfig = {
