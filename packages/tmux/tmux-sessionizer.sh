@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(project-finder "$HOME/projects" "base" | fzf-tmux -p)
+    selected=$(project-finder "$HOME" "base" | fzf-tmux -p)
 fi
 
 if [[ -z $selected ]]; then

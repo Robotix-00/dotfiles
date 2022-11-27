@@ -13,7 +13,7 @@ fi
 
 {
     # find all sub-directories
-    find $baseDir -maxdepth 1 -mindepth 1 -type d &
+    find $baseDir -not -path '*/.*' -maxdepth 1 -mindepth 1 -type d &
 
     # find all sub-directories with a project-base marker and run this script on them
     find $baseDir -maxdepth 2 -mindepth 2 -type f -name ".projectDir" -print0 | xargs -0 -r dirname | xargs -r -L1 $0
