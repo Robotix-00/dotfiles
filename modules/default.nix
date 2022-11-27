@@ -1,16 +1,19 @@
 { pkgs, lib, isDesktop, ... }:
 {
   imports = [
+    ./mountpoints.nix
+
     ./../packages
     ./../assets
+
     ./virtualisation.nix
     ./docker.nix
+
     ./gpg.nix
     ./ssh.nix
 
   ] ++ lib.optionals isDesktop [
     ./audio.nix
-
     ./desktop
   ];
 

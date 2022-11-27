@@ -66,25 +66,12 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/e37c33a8-e178-42ae-9431-a617b0d73717";
-      fsType = "ext4";
-    };
 
-  fileSystems."/nix/store" =
-    { device = "/nix/store";
-      fsType = "none";
-      options = [ "bind" ];
-    };
-
+  # device specific mount-points
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/293A-451F";
       fsType = "vfat";
     };
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/169130e0-3ea6-46b8-89c9-d21c73af5608"; }
-    ];
 
   # mount mass storage drive in user space
   fileSystems."/home/bruno/projects" = {
