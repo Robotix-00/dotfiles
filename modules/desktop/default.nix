@@ -5,6 +5,8 @@
     ./xmonad
   ];
 
+  hardware.opengl.enable = true;
+
   services = {
     xserver = {
       enable = true;

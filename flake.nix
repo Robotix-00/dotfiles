@@ -51,6 +51,12 @@
 
     in {
       nixosConfigurations = {
+        # basic image
+        base = mkComputer {
+          config = ./systems/base.nix;
+          isDesktop = true;
+        };
+
         LLOYD = mkComputer {
           config = ./systems/LLOYD.nix;
           isDesktop = true;
