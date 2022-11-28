@@ -3,7 +3,6 @@
   imports =
     [
       ./../modules
-      ./../modules/bluetooth.nix
 
       ./../modules/hardware/printing.nix
     ] ++ lib.optionals isDesktop [
@@ -28,13 +27,6 @@
     };
   };
 
-  # define hostname
-  networking.networkmanager.enable = true;
-  networking.firewall.enable = true;
-  networking.firewall.allowedTCPPorts = [ 80 ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-
-  networking.useDHCP = lib.mkDefault true;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 

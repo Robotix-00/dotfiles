@@ -3,11 +3,11 @@
   imports = [
     ./mountpoints.nix
 
+    ./network
+    ./virtualisation
+
     ./../packages
     ./../assets
-
-    ./virtualisation.nix
-    ./docker.nix
 
     ./gpg.nix
     ./ssh.nix
