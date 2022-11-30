@@ -450,9 +450,13 @@ myKeys' conf = let
    ] ++ zipWith(\k v -> ("M-d "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   ) ^++^
 
-  subKeys "Volume Control"
+  subKeys "media control"
   [ ("<XF86AudioRaiseVolume>", addName "raise volume" $ spawn "amixer set Master 10%+")
   , ("<XF86AudioLowerVolume>", addName "lower volume" $ spawn "amixer set Master 10%-")
+  , ("<XF86AudioMute>", addName "mute volume" $ spawn "amixer set Master 1+ toggle")
+  , ("<XF86AudioPlay>", addName "play audio" $ spawn "playerctl play-pause")
+  , ("<XF86AudioNext>", addName "next song" $ spawn "playerctl next")
+  , ("<XF86AudioPrev>", addName "prev song" $ spawn "playerctl previous")
   ]
 
 ---Mouse bindings----------------------------------------------------{{{

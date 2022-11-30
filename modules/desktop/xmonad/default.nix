@@ -20,6 +20,7 @@
     xmobar      # task bar
     pstree      # so window swallowing works for xmonad
     gnome.zenity# text displaying for keybinds
+    playerctl
   ];
 
 
