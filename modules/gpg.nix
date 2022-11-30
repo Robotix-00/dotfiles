@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, stable, ... }:
 {
   programs.gnupg.agent = {
      enable = true;
@@ -6,6 +6,6 @@
    };
 
   environment.systemPackages = with pkgs; [
-    gnupg
+    stable.gnupg
   ];
 }
