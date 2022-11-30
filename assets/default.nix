@@ -1,9 +1,9 @@
-{ pkgs, self, ... }:
+{ pkgs, ... }:
 {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin
       "refresh-background"
-      "feh ${self}/assets/background --randomize --bg-fill"
+      "feh ${./background} --randomize --bg-fill"
     )
   ];
 }
