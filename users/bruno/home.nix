@@ -20,7 +20,6 @@ in
       # ".config/ranger/".source = ./../../packages/ranger/config;   # set to manual, doesnt work because confdir has to be writable
       ".config/kitty/".source = ./../../packages/kitty/config;
       ".tmux.conf".source = ./../../packages/tmux/tmux.conf;
-      ".zshrc".source = ./../../packages/zsh/zshrc;
 
       # cursor
       ".icons/default".source = "${nordzyCursors}/Nordzy-cursors";
@@ -47,7 +46,6 @@ in
 
     gpg-agent = {
       enable = true;
-      # enableZshIntegration = true;
     };
   };
 

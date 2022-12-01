@@ -8,11 +8,11 @@
     };
     enableCompletion = true;
     autosuggestions.enable = true;
+    promptInit = builtins.readFile ./zshrc;
 
     ohMyZsh = {
       enable = true;
       plugins = [ "git" "man" "fzf" "thefuck" ];
-      theme = "jbergantine";
     };
   };
 
