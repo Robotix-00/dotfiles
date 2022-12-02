@@ -1,5 +1,5 @@
 Config {
-  font = "xft:Fira Code:size=10:bold",
+  font = "xft:FiraCode",
   additionalFonts = [ "xft:Hack Nerd Font Mono:size=15:bold"
                     ]
 
