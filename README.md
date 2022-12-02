@@ -3,7 +3,8 @@
 
 ## Features
 - NixOS configuration
-	- multi-system setup (with currently only one: **LLOYD**)
+	- current Nix version: `22.11`
+	- multi-system setup (**base** (base image), **LLOYD** (maschine specific configuration))
 	- HomeManager configuration in users/
 - [XMonad configuration](modules/desktop/xmonad/config/xmonad.hs), also see [XMonad Feature](#xmonad-features)
 
