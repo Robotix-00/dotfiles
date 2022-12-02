@@ -1,11 +1,11 @@
 Config {
-  font = "xft:FiraCode",
+  font = "xft:FiraCode-10",
   additionalFonts = [ "xft:Hack Nerd Font Mono:size=15:bold"
                     ]
 
   bgColor = "#002b36",
   fgColor = "#268bd2",
-  position = TopW L 100,
+  position = Top,
 
   sepChar = "%",
   alignSep = "}{",
@@ -41,7 +41,7 @@ Config {
       ] 10
     --! crashing xmobar on startup
     , Run Alsa "default" "Master"
-      [ "-t", "<box type=Bottom width=2 mb=2 color=#268bd2>Vol <action=`amixer set Master 10%-`>-</action> <volumebar> <action=`amixer set Master 10%+`>+</action> <action=`amixer set Master toggle`><status></action></box>"
+      [ "-t", "<box type=Bottom width=2 mb=2 color=#268bd2>Vol <action=`amixer set Master 10%- > /dev/null`>-</action> <volumebar> <action=`amixer set Master 10%+ > /dev/null`>+</action> <action=`amixer set Master toggle`><status></action></box>"
       ]
     , Run Memory ["-t","Mem: <usedbar>"] 10
     , Run Swap ["-t", "<usedratio>%"] 10
