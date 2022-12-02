@@ -12,7 +12,6 @@ autoload -Uz vcs_info
 precmd() { vcs_info }
 setopt prompt_subst
 zstyle ':vcs_info:git:*' formats "%r \ue0A0%b %m%u%c"
-# Format the vcs_info_msg_0_ variable
 
 prompt_base() {
     echo -n "%F{blue}%B%K{blue}%F{black}%n@%m%b%F{blue}}"
@@ -26,7 +25,7 @@ prompt_git() {
 }
 prompt_end() {
     echo -n "%K{black}\ue0b0%F{white}%K{black}%B %D{%a %b %d} %D{%I:%M:%S%P}%k%F{black}\ue0b0%f
-%F{blue}%K{black}%B%1~/%F{black}%k\ue0b0%b%f"
+%F{blue}%K{black}%B%1~%F{black}%k\ue0b0%b%f"
 }
 
 build_prompt() {
