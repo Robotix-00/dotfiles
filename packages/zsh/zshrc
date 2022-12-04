@@ -6,41 +6,6 @@ bindkey '^b'   forward-word
 bindkey '^e'   clear-screen
 bindkey -s ^f "tmux-sessionizer\n"
 
-# enable git
-# Load version control information
-autoload -Uz vcs_info
-precmd() { vcs_info }
-setopt prompt_subst
-zstyle ':vcs_info:git:*' formats "%r \ue0A0%b %m%u%c"
-
-prompt_base() {
-    echo -n "%F{blue}%B%K{blue}%F{black}%n@%m%b%F{blue}}"
-}
-
-prompt_git() {
-    # if [[ -n ${vcs_info_msg_0_} ]]; then
-    #     return
-    # fi
-    echo -n "%K{yellow}\ue0b0%F{black} %B${vcs_info_msg_0_}%b%F{yellow}"
-}
-prompt_end() {
-    echo -n "%K{black}\ue0b0%F{white}%K{black}%B %D{%a %b %d} %D{%I:%M:%S%P}%k%F{black}\ue0b0%f
-%F{blue}%K{black}%B%1~%F{black}%k\ue0b0%b%f"
-}
-
-build_prompt() {
-    prompt_base
-    prompt_git
-    prompt_end
-}
-
-RPROMPT="\
-%(?.%F{green}✔.%F{red}✗)%f"
-
-
-
-PROMPT='$(build_prompt)'
-
 
 # show only current prompt
 del-prompt-accept-line() {
