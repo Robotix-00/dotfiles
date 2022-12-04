@@ -48,7 +48,7 @@ in
     configure = {
       customRC = ''
         lua require("robotix")
-      '' + builtins.readFile ./vimrc;
+      '';
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
@@ -111,6 +111,7 @@ in
     # lsp servers
     pylint
     rnix-lsp
+    
     haskell-language-server
 
     cargo

@@ -86,6 +86,7 @@ myApplications =
   , ("VS Code", "code", "light weight code editor")
   , ("Firefox", "firefox", "nice browser")
   , ("Brave", "brave", "privacy browser")
+  , ("", "", "")
   , ("Thunderbird", "thunderbird", "graphical email client")
   , ("Evince", "evince", "pdf viewer")
   , ("VLC-Player", "vlc", "media player")
@@ -232,7 +233,7 @@ myPP = def
 ---gridselect--------------------------------------------------------{{{
 
 remap' :: [(String, String, String)] -> [(String, String)]
-remap' lst = map (\(a,b,c)->(a,b)) lst
+remap' = map (\(a,b,c)->(a,b))
 
 spawnSelected' :: [(String, String)] -> X ()
 spawnSelected' lst = gridselect myGridConfig lst >>= flip whenJust spawn
@@ -276,7 +277,7 @@ treeselectAction a = TS.treeselectAction a
           ]
    ]
    where
-     treeApplications = map (\(a, b, c) -> (Node (TS.TSNode a c (spawn b)) [])) myApplications
+     treeApplications = map (\(a, b, c) -> Node (TS.TSNode a c (spawn b)) []) myApplications
 
 
 tsDefaultConfig :: TS.TSConfig a
@@ -319,10 +320,10 @@ scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
-myLayout = avoidStruts $ windowNavigation $ (BW.boringWindows)
+myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
   (main ||| full)
   where
-    named n        = renamed [(XMonad.Layout.Renamed.Replace n)]
+    named n        = renamed [XMonad.Layout.Renamed.Replace n]
 
     addTopBar      = noFrillsDeco shrinkText topBarTheme
 
@@ -391,16 +392,16 @@ myKeys' conf = let
 
   subKeys str ks = subtitle str : mkNamedKeymap conf ks
 
-  zipM  m nm ks as f = (zipWith(\k v -> (m++k, addName nm $ f v)) ks as)
-  zipDir m nm f = (zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f)
+  zipM  m nm ks as f = zipWith(\k v -> (m++k, addName nm $ f v)) ks as
+  zipDir m nm f = zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f
 
-  zipM'  m nm ks as f b = (zipWith(\k v -> (m++k, addName nm $ f v b)) ks as)
-  zipDir' m nm f b = (zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b)
+  zipM'  m nm ks as f b = zipWith(\k v -> (m++k, addName nm $ f v b)) ks as
+  zipDir' m nm f b = zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b
 
   in
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
-  , ("M-C-q"          , addName "Quits XMonad"        $ io (exitWith ExitSuccess))
+  , ("M-C-q"          , addName "Quits XMonad"        $ io exitSuccess)
   , ("M-S-q"          , addName "Locks Screen"        $ spawn "xscreensaver-command -lock")
   ] ^++^
 
@@ -426,8 +427,8 @@ myKeys' conf = let
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipDir'   "M-S-"      "swap w"            (windowSwap) False
-    ++ zipDir'   "M-"        "focus w"           (windowGo) False
+    ++ zipDir'   "M-S-"      "swap w"            windowSwap False
+    ++ zipDir'   "M-"        "focus w"           windowGo False
 
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
     ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]

@@ -51,13 +51,13 @@ require('lspconfig')['rust_analyzer'].setup{
 }
 
 -- not working properly
--- require('lspconfig')['rnix-lsp'].setup {
---     on_attach = on_attach,
---     flags = lsp_flags,
--- }
+require('lspconfig')['rnix'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+}
 
--- require('lspconfig')['haskell-language-server'].setup {
---     on_attach = on_attach,
---     flags = lsp_flags,
--- }
+require('lspconfig')['hls'].setup {
+    on_attach = on_attach,
+    flags = lsp_flags,
+}
 
