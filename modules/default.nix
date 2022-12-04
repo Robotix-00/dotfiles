@@ -57,4 +57,6 @@
     LC_TELEPHONE = "de_DE.utf8";
     LC_TIME = "de_DE.utf8";
   };
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 }

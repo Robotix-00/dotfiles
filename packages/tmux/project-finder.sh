@@ -4,7 +4,6 @@ if [[ $# -ge 1 ]]; then
     # if called with argument 'base', add all static projdirs once
     if [ $# -eq 2 ] && [ $2 = "base" ]; then
         echo "/etc/nixos"
-        echo "/mnt"
     fi
 
     baseDir=$1

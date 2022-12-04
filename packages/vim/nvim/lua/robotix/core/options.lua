@@ -3,6 +3,7 @@ vim.opt.guicursor = ""
 -- line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.exrc = true
 
 -- indentation
 vim.opt.tabstop = 4

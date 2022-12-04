@@ -7,4 +7,4 @@ require("robotix.plugins.lightline")
 require("robotix.plugins.cmp")
 
 -- WIP
--- require("robotix.plugins.lsp.lsp")
+require("robotix.plugins.lsp")

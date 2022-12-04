@@ -1,6 +1,8 @@
 # TODOs
 
 ## Fixes
+- [ ] screens messed up after hibernation
+- [ ] fonts of treeselect messed up after reboot
 
 ## Tasks
 - [ ] Write a proper README

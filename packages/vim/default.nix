@@ -112,6 +112,9 @@ in
     pylint
     rnix-lsp
     haskell-language-server
+
+    cargo
+    rustc
     rust-analyzer
   ];
 }
