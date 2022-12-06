@@ -1,7 +1,7 @@
 Config {
   font = "xft:FiraCode-10",
   additionalFonts = [ "xft:Hack Nerd Font Mono:size=15:bold"
-                    ]
+                    ],
 
   bgColor = "#002b36",
   fgColor = "#268bd2",

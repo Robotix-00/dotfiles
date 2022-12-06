@@ -16,3 +16,4 @@
     - [x] add .dotfiles back to the finder
     - [ ] config in .projectDir specifying other locations?
     - [x] .projdir file in every directory (marks it as directory, and maybe points to others)
+- [ ] Add xmonad workspace treeselect (dynamic workspaces)
