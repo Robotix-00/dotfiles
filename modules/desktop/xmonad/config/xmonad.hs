@@ -43,6 +43,7 @@ import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicProperty
 import XMonad.Hooks.StatusBar
+import XMonad.Hooks.WorkspaceHistory
 
 import XMonad.Layout.Circle
 import qualified XMonad.Layout.GridVariants as GV
@@ -130,7 +131,8 @@ myConfig = def {
         clickJustFocuses   = True,
         borderWidth        = 0,
         modMask            = mod4Mask,
-        workspaces         = myWorkspaces,
+        -- workspaces         = myWorkspaces,
+        workspaces = TS.toWorkspaces myTreeSpaces,
 
       -- key bindings
         mouseBindings      = myMouseBindings,
@@ -139,7 +141,7 @@ myConfig = def {
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        -- logHook            = myLogHook,
+        logHook            = workspaceHistoryHook,
         startupHook        = myStartupHook
                  }
 
@@ -199,7 +201,23 @@ wsDEV = "dev"
 wsWEB = "web"
 wsENT = "media"
 
-myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "zero"]
+-- TODO: fix shortcut navigation (add dynamic workspaces)
+myTreeSpaces :: Forest String
+myTreeSpaces = [ Node wsGEN []
+               , Node wsWEB []
+               , Node wsDEV
+                 [ Node "Browser" []
+                 ]
+               , Node "four" []
+               , Node "five" []
+               , Node "six" []
+               , Node "seven" []
+               , Node "eight" []
+               , Node "nine" []
+               , Node "NSP" []
+               ]
+
+-- myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "zero"]
 
 projects :: [Project]
 projects = [ Project { projectName  = wsGEN
@@ -425,6 +443,7 @@ myKeys' conf = let
    , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
+   , ("M-z"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipDir'   "M-S-"      "swap w"            windowSwap False
