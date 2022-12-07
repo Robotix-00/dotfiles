@@ -402,7 +402,7 @@ myKeys' conf = let
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
   , ("M-C-q"          , addName "Quits XMonad"        $ io exitSuccess)
-  , ("M-S-q"          , addName "Locks Screen"        $ spawn "xscreensaver-command -lock")
+  , ("M-S-q"          , addName "Locks Screen"        $ spawn "xdg-screensaver lock")
   ] ^++^
 
   subKeys "Layout"
