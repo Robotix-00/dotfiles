@@ -321,7 +321,7 @@ scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
-  (main ||| full)
+  (main ||| Full)
   where
     named n        = renamed [XMonad.Layout.Renamed.Replace n]
 
@@ -347,9 +347,6 @@ myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
     --     tabbs $ sublayouts $
     --       mySpacing $
     --         Tall 1 (3/100) (1/2)
-
-    full = named "Full" $
-      Full
 
 ---------------------------------------------------------------------}}}
 ---hooks-------------------------------------------------------------{{{
@@ -377,28 +374,7 @@ myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
 
 ---------------------------------------------------------------------}}}
 ---keybindings-------------------------------------------------------{{{
-myKeys' conf = let
-  dirKeys   = ["j", "k", "h", "l"]
-  arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
-  dirs      = [ D, U, L, R ]
-
-  screenKeys    = ["w", "e", "r"]
-  wsKeys        = map show $ [1..9] ++ [0]
-  modm          = mod4Mask
-
-  scratchpadNames   = ["spotify", "discord"]
-  scratchpadKeys    = ["j", "k", "l"]
-
-
-  subKeys str ks = subtitle str : mkNamedKeymap conf ks
-
-  zipM  m nm ks as f = zipWith(\k v -> (m++k, addName nm $ f v)) ks as
-  zipDir m nm f = zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f
-
-  zipM'  m nm ks as f b = zipWith(\k v -> (m++k, addName nm $ f v b)) ks as
-  zipDir' m nm f b = zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b
-
-  in
+myKeys' conf = 
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
   , ("M-C-q"          , addName "Quits XMonad"        $ io exitSuccess)
@@ -459,6 +435,28 @@ myKeys' conf = let
   , ("<XF86AudioNext>", addName "next song" $ spawn "playerctl next")
   , ("<XF86AudioPrev>", addName "prev song" $ spawn "playerctl previous")
   ]
+  where
+    dirKeys   = ["j", "k", "h", "l"]
+    arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
+    dirs      = [ D, U, L, R ]
+
+    screenKeys    = ["w", "e", "r"]
+    wsKeys        = map show $ [1..9] ++ [0]
+    modm          = mod4Mask
+
+    scratchpadNames   = ["spotify", "discord"]
+    scratchpadKeys    = ["j", "k", "l"]
+
+    -- wrapper function to create a named keymap
+    subKeys str ks = subtitle str : mkNamedKeymap conf ks
+
+    -- funcion applying action/direction keys to each input
+    zipM  m nm ks as f = zipWith(\k v -> (m++k, addName nm $ f v)) ks as
+    zipDir m nm f = zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f
+
+    zipM'  m nm ks as f b = zipWith(\k v -> (m++k, addName nm $ f v b)) ks as
+    zipDir' m nm f b = zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b
+
 
 ---Mouse bindings----------------------------------------------------{{{
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
