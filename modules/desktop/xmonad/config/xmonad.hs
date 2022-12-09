@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
-
+--                                                                    --
 --              \ \/ /  \/  | ___  _ __   __ _  __| |                 --
 --               \  /| |\/| |/ _ \| '_ \ / _` |/ _` |                 --
 --               /  \| |  | | (_) | | | | (_| | (_| |                 --
@@ -86,7 +86,6 @@ myApplications =
   , ("VS Code", "code", "light weight code editor")
   , ("Firefox", "firefox", "nice browser")
   , ("Brave", "brave", "privacy browser")
-  , ("", "", "")
   , ("Thunderbird", "thunderbird", "graphical email client")
   , ("Evince", "evince", "pdf viewer")
   , ("VLC-Player", "vlc", "media player")
