@@ -1,16 +1,5 @@
 { pkgs, stable, lib, ... }:
 let
-  # nixpks version doesn't work, use manual
-  # vim-better-whitespace = pkgs.vimUtils.buildVimPlugin {
-  #   name = "vim-better-whitespace";
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "ntpeters";
-  #     repo = "vim-better-whitespace";
-  #     rev = "1b22dc57a2751c7afbc6025a7da39b7c22db635d";
-  #     sha256 = "10l01a8xaivz6n01x6hzfx7gd0igd0wcf9ril0sllqzbq7yx2bbk";
-  #   };
-  # };
-
   vim-hexedit = pkgs.vimUtils.buildVimPlugin {
     name = "vim-hexedit";
     src = pkgs.fetchFromGitHub {
@@ -90,15 +79,13 @@ in
 
           # language specific
           vim-nix           # nix support
-          vim-polyglot      # multilingual support
           markdown-preview-nvim # markdown previewer
 
           # visual
           vim-devicons      # icons for nerdtree
           lightline-vim     # status bar
           gruvbox-nvim      # theme
-        ] ++ [
-          # vim-better-whitespace   # shows tailing whitespaces
+          vim-better-whitespace   # shows tailing whitespaces
         ];
 
         opt = [
