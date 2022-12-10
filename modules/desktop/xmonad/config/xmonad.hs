@@ -373,7 +373,7 @@ myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
 
 ---------------------------------------------------------------------}}}
 ---keybindings-------------------------------------------------------{{{
-myKeys' conf = 
+myKeys' conf =
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
   , ("M-C-q"          , addName "Quits XMonad"        $ io exitSuccess)
@@ -402,11 +402,11 @@ myKeys' conf =
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipDir'   "M-S-"      "swap w"            windowSwap False
-    ++ zipDir'   "M-"        "focus w"           windowGo False
+    ++ zipM     "M-S-"       "move w to ws"  wsKeys [0..] (withNthWorkspace W.shift)
+    ++ zipDir'  "M-S-"       "swap w"            windowSwap False
+    ++ zipDir'  "M-"         "focus w"           windowGo False
 
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
-    ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]
   )^++^
 
   subKeys "Sub Layouts"
