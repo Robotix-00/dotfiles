@@ -226,6 +226,7 @@ myPP = filterOutWsPP [ "NSP" ] def
         , ppUrgent              = xmobarColor "#FF0000"    "" . wrap "!" "!"    --TODO
         , ppTitle               = xmobarColor color_active "" . shorten 30
         , ppLayout              = xmobarColor "#00FFFF" ""
+        , ppTitleSanitize       = xmobarStrip
         , ppWsSep               = " "
         , ppOrder               = id
         }
