@@ -219,13 +219,14 @@ projects = [ Project { projectName  = wsGEN
 ---statusbar---------------------------------------------------------{{{
 mySB = statusBarProp myStatusbar (pure myPP)
 
-myPP = def
+myPP = filterOutWsPP [ "NSP" ] def
         { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
-        , ppTitle               = xmobarColor color_active "" . shorten 30
         , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
-        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
-        , ppWsSep               = " "
+        , ppHidden              = xmobarColor color_base3  "" . wrap "{" "}"
+        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap "!" "!"    --TODO
+        , ppTitle               = xmobarColor color_active "" . shorten 30
         , ppLayout              = xmobarColor "#00FFFF" ""
+        , ppWsSep               = " "
         , ppOrder               = id
         }
 ---------------------------------------------------------------------}}}
