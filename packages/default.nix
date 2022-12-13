@@ -39,8 +39,6 @@
     wget
     tree
     bat
-    ranger
-    odt2txt pandoc ueberzug poppler_utils # ranger util
 
     ripgrep
     stable.peco
