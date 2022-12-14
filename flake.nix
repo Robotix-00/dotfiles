@@ -61,6 +61,10 @@
           config = ./systems/LLOYD.nix;
           isDesktop = true;
         };
+
+        Lelouch = mkComputer {
+          config = ./systems/Lelouch.nix;
+        };
       };
     };
 }

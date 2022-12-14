@@ -41,6 +41,18 @@
 
 
   # device specific mount-points
+  fileSystems."/" =
+      { device = "/dev/disk/by-label/nixos";
+        fsType = "ext4";
+      };
+
+  fileSystems."/nix/store" =
+    { device = "/nix/store";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/293A-451F";
       fsType = "vfat";
