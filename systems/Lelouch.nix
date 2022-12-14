@@ -27,10 +27,10 @@
 
   services.xserver.libinput = {
     enable = true;
+	touchpad = {
     naturalScrolling = true;
     middleEmulation = true;
     tapping = true;
+	};
   };
-
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

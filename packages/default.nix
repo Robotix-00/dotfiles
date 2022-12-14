@@ -30,7 +30,6 @@
     iw
 
     # file management
-    vim
     git
     git-secret
 
