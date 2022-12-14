@@ -26,8 +26,6 @@ let
   };
 in
 {
-  environment.variables = { EDITOR = "vim"; };
-
   programs.neovim = {
     enable = true;
     vimAlias = true;
@@ -99,7 +97,6 @@ in
     # lsp servers
     pylint
     rnix-lsp
-    
     haskell-language-server
 
     cargo
