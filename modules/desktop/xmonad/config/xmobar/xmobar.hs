@@ -9,7 +9,7 @@ Config {
 
   sepChar = "%",
   alignSep = "}{",
-  template = "<box type=Bottom width=2 color=#268bd2>%XMonadLog%</box> | %multicpu% <box type=Bottom width=2 color=#268bd2>%coretemp%</box> | <box type=Bottom width=2 color=#268bd2>%memory% + %swap%</box> | <box type=Bottom width=2 color=#268bd2>%dynnetwork%</box> }{<action=`refresh-background`>[~]</action> %uptime% %alsa:default:Master% <fc=#ee9a00>%date%</fc> <box type=Bottom width=2 color=#268bd2>%uname%</box>",
+  template = "<box type=Bottom width=2 color=#268bd2>%XMonadLog%</box> | %multicpu% <box type=Bottom width=2 color=#268bd2>%coretemp%</box> | <box type=Bottom width=2 color=#268bd2>%memory% + %swap%</box> | <box type=Bottom width=2 color=#268bd2>%dynnetwork%</box> }{<action=`refresh-background`>[~]</action> %uptime% %alsa:default:Master% <fc=#ee9a00>%date%</fc> %battery% <box type=Bottom width=2 color=#268bd2>%uname%</box>",
 
   commands =
     [ Run DynNetwork
@@ -28,6 +28,21 @@ Config {
       , "--normal"   , "darkorange"
       , "--high"     , "darkred"
       ] 50
+    ,  Run Battery
+      [ "--template" , "<box type=Bottom width=2 color=#268bd2><acstatus></box>"
+      , "--Low"      , "10"        -- units: %
+      , "--High"     , "80"        -- units: %
+      , "--low"      , "darkred"
+      , "--normal"   , "darkorange"
+      , "--high"     , "darkgreen"
+      , "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<left>% (<timeleft>)"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#dAA520>Charging (<left>%)</fc>"
+                                       -- charged status
+                                       , "-i"	, "<fc=#006000>Charged</fc>"
+    ] 50
     , Run MultiCpu
       [ "--template" , "<box type=Bottom width=2 color=#268bd2>Cpu: <autovbar></box>"
       , "--Low"      , "50"         -- units: %
@@ -39,7 +54,6 @@ Config {
     , Run Uptime
       [ "-t", "<box type=Bottom width=2 color=#268bd2>Uptime: <days>d <hours>h <minutes>m</box>"
       ] 10
-    --! crashing xmobar on startup
     , Run Alsa "default" "Master"
       [ "-t", "<box type=Bottom width=2 color=#268bd2>Vol <action=`amixer set Master 10%- > /dev/null`>-</action> <volumebar> <action=`amixer set Master 10%+ > /dev/null`>+</action> <action=`amixer set Master toggle`><status></action></box>"
       ]
