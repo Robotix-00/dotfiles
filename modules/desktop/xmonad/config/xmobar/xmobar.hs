@@ -37,7 +37,7 @@ Config {
       , "--high"     , "darkgreen"
       , "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"	, "<left>% (<timeleft>)"
+                                       , "-o"	, "<left>%"
                                        -- AC "on" status
                                        , "-O"	, "<fc=#dAA520>Charging (<left>%)</fc>"
                                        -- charged status
