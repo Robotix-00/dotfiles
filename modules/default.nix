@@ -10,7 +10,6 @@
     ./../assets
 
     ./gpg.nix
-    ./ssh.nix
 
   ] ++ lib.optionals isDesktop [
     ./audio.nix

@@ -2,6 +2,7 @@
 {
   imports = [
     ./bluetooth.nix
+    ./ssh.nix
   ];
 
   networking.networkmanager.enable = true;
