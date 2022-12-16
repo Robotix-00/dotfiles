@@ -51,19 +51,14 @@
 
     in {
       nixosConfigurations = {
-        # basic image
-        base = mkComputer {
-          config = ./systems/base.nix;
-          isDesktop = true;
-        };
-
         LLOYD = mkComputer {
           config = ./systems/LLOYD.nix;
           isDesktop = true;
         };
 
-        Lelouch = mkComputer {
-          config = ./systems/Lelouch.nix;
+        Yami = mkComputer {
+          config = ./systems/Yami.nix;
+          isDesktop = true;
         };
       };
     };

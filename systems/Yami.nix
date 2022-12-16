@@ -1,4 +1,4 @@
-{config, lib, pkgs, modulesPath, ... }:
+{config, lib, pkgs, ... }:
 
 {
   imports =
@@ -6,7 +6,7 @@
       ./base.nix
     ];
 
-  networking.hostName = "Lelouch"; # Define your hostname.
+  networking.hostName = "Yami"; # Define your hostname.
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
