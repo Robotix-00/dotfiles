@@ -31,14 +31,9 @@
   # define hostname
   networking.hostName = "LLOYD";
 
-  # video drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-
   # hardware stuff
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.kernelModules = [ "kvm-intel" ];
-
 
   # device specific mount-points
   fileSystems."/" =

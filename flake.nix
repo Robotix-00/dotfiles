@@ -6,13 +6,15 @@
 
     nixpkgs_stable.url = github:nixos/nixpkgs/nixos-22.11;
 
+    nixos-hardware.url = github:nixos/nixos-hardware/master;
+
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = {self, nixpkgs, nixpkgs_stable, home-manager}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, nixos-hardware}:
     let
       system = "x86_64-linux";
       pkgConfig = {
@@ -54,10 +56,18 @@
         LLOYD = mkComputer {
           config = ./systems/LLOYD.nix;
           isDesktop = true;
+          extraPackages = [
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+          ];
         };
 
         Yami = mkComputer {
           config = ./systems/Yami.nix;
+          extraPackages = [
+            # actually e15
+            nixos-hardware.nixosModules.lenovo-thinkpad-e14-intel
+          ];
           isDesktop = true;
         };
       };
