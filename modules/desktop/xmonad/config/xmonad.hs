@@ -393,6 +393,7 @@ myKeys' conf =
   subKeys "Actions"
   [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
   , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
+  , ("<Print>"      , addName "open screenshot menu"  $ spawn "flameshot gui")
   , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
