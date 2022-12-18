@@ -1,4 +1,4 @@
-{ pkgs, config, lib, isDesktop, grub-themes, ... }:
+{ pkgs, config, lib, isDesktop, ... }:
 {
   imports =
     [
@@ -7,6 +7,7 @@
       ./../modules/hardware/printing.nix
     ] ++ lib.optionals isDesktop [
     ];
+
 
   # Bootloader
   boot.loader = {
@@ -20,10 +21,11 @@
       devices = [ "nodev" ];
       efiSupport = true;
       version = 2;
+    };
 
-      extraConfig = ''
-        set theme=${grub-themes.cyberpunk}
-      '';
+    grub2-theme = {
+      theme = "vimix";
+      icon = "color";
     };
   };
 

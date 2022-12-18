@@ -8,13 +8,15 @@
 
     nixos-hardware.url = github:nixos/nixos-hardware/master;
 
+    grubtheme.url = github:vinceliuice/grub2-themes/master;
+
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, nixos-hardware}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, nixos-hardware, grubtheme}:
     let
       system = "x86_64-linux";
       pkgConfig = {
@@ -37,11 +39,11 @@
 
         specialArgs = {
           inherit self stable isDesktop;
-          grub-themes = pkgs.callPackage ./modules/grub_themes.nix {};
         };
 
         modules = [
           config
+          grubtheme.nixosModule
 
           home-manager.nixosModules.home-manager {
             home-manager.users.bruno = {
