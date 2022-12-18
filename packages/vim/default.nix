@@ -41,7 +41,7 @@ in
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
           myConfig
-          nerdtree          # file navigation
+          harpoon
           telescope-nvim    # file fuzzy finding
           vim-commentary    # comment shortcuts
           indentLine        # shows lines for indent scopes
@@ -49,13 +49,13 @@ in
           vim-tmux-navigator
           vim-surround      # surround word with characters #TODO
           # vim-better-whitespace #BROKEN shows tailing whitespaces
-          harpoon
 
           nvim-treesitter
           nvim-treesitter-context
 
           vimbegood
 
+          nerdtree          # file navigation
           # code completion
           nvim-cmp
           cmp-buffer
