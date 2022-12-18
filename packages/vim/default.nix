@@ -47,7 +47,7 @@ in
           indentLine        # shows lines for indent scopes
           vim-visual-multi  # multi line edits
           vim-tmux-navigator
-          vim-surround      # surround word with characters #TODO
+          vim-surround      # surround word with characters
           # vim-better-whitespace #BROKEN shows tailing whitespaces
 
           nvim-treesitter
@@ -55,7 +55,6 @@ in
 
           vimbegood
 
-          nerdtree          # file navigation
           # code completion
           nvim-cmp
           cmp-buffer
