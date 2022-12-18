@@ -40,7 +40,7 @@ in
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
-          myConfig          # TODO
+          myConfig
           nerdtree          # file navigation
           telescope-nvim    # file fuzzy finding
           vim-commentary    # comment shortcuts
@@ -49,6 +49,7 @@ in
           vim-tmux-navigator
           vim-surround      # surround word with characters #TODO
           # vim-better-whitespace #BROKEN shows tailing whitespaces
+          harpoon
 
           nvim-treesitter
           nvim-treesitter-context
