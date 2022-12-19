@@ -83,7 +83,7 @@ in
           # visual
           vim-devicons      # icons for nerdtree
           lightline-vim     # status bar
-          gruvbox-nvim      # theme
+          rose-pine         # theme
           vim-better-whitespace   # shows tailing whitespaces
         ];
 
