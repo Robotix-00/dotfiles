@@ -9,7 +9,7 @@ Config {
 
   sepChar = "%",
   alignSep = "}{",
-  template = "<box type=Bottom width=2 color=#268bd2>%XMonadLog%</box> <box type=Bottom width=2 color=#268bd2>%memory% + %swap%</box> <box type=Bottom width=2 color=#268bd2>%dynnetwork%</box>}{<action=`refresh-background`>[~]</action> %uptime% %alsa:default:Master% %battery% %date% <box type=Bottom width=2 color=#268bd2>%uname%</box>",
+  template = "<box type=Bottom width=2 color=#268bd2>%XMonadLog%</box> <box type=Bottom width=2 color=#268bd2>%memory% + %swap%</box> <box type=Bottom width=2 color=#268bd2>%dynnetwork%</box>}{<action=`refresh-background`>[~]</action> %uptime% %alsa:default:Master% %battery%%date% <box type=Bottom width=2 color=#268bd2>%uname%</box>",
 
   commands =
     [ Run DynNetwork
@@ -21,7 +21,7 @@ Config {
       , "--high"     , "darkred"
       ] 10
     ,  Run Battery
-      [ "--template" , "<box type=Bottom width=2 color=#268bd2><acstatus></box>"
+      [ "--template" , "<acstatus>"
       , "--Low"      , "10"        -- units: %
       , "--High"     , "80"        -- units: %
       , "--low"      , "darkred"
@@ -29,11 +29,11 @@ Config {
       , "--high"     , "darkgreen"
       , "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"	, "<left>%"
+                                       , "-o"	, "<box type=Bottom width=2 color=#268bd2><left>%</box> "
                                        -- AC "on" status
-                                       , "-O"	, "<fc=#dAA520>Charging (<left>%)</fc>"
-                                       -- charged status
-                                       , "-i"	, "<fc=#006000>Charged</fc>"
+                                       , "-O"	, "<box type=Bottom width=2 color=#268bd2><fc=#dAA520>Charging (<left>%)</fc></box> "
+                                       -- charged status - show nothing
+                                       , "-i"	, ""
     ] 50
     , Run Uptime
       [ "-t", "<box type=Bottom width=2 color=#268bd2>Uptime: <days>d <hours>h <minutes>m</box>"
