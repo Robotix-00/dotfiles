@@ -40,7 +40,6 @@
     bat
 
     ripgrep
-    stable.peco
 
     # processes
     htop
@@ -69,7 +68,6 @@
     evince            # pdf viewer
     thunderbird       # email client
     joplin-desktop    # note-taking software
-    languagetool
 
     # images
     feh         # image viewer
@@ -80,7 +78,7 @@
 
     # GUI tools
     firefox
-    stable.brave
+    brave
 
     discord
     spotify
