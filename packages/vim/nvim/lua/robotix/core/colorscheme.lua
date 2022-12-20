@@ -10,4 +10,3 @@ function ColorMyPencil(color)
 end
 
 ColorMyPencil()
--- vim.cmd("highlight Normal guibg=none")
