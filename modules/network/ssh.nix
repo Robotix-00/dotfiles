@@ -6,5 +6,5 @@
   };
 
   # make it not autostart
-  systemd.services."sshd".wantedBy = lib.mkForce [];
+  # systemd.services."sshd".wantedBy = lib.mkForce [];
 }
