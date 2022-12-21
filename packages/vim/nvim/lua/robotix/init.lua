@@ -6,6 +6,6 @@ require("robotix.plugins.telescope")
 require("robotix.plugins.lightline")
 require("robotix.plugins.cmp")
 require("robotix.plugins.harpoon")
+require("robotix.plugins.nullls")
 
--- WIP
 require("robotix.plugins.lsp")
