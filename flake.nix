@@ -1,5 +1,5 @@
 {
-  description = "Meine absolut sicke Systemkonfiguration";
+  description = "my sick system configuration(s)";
 
   inputs = {
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
