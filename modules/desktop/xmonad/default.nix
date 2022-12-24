@@ -15,7 +15,7 @@
    };
  };
    environment.systemPackages = with pkgs; [
-    dmenu       # search menu
+    ulauncher   # search menu
     feh         # background and images
     xmobar      # task bar
     pstree      # so window swallowing works for xmonad

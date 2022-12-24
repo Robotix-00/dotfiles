@@ -73,7 +73,7 @@ import qualified XMonad.StackSet as W
 myTerminal  = "kitty"
 myBrowser = "firefox"
 myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
-myMenu    = "dmenu_run"
+myMenu    = "ulauncher"
 myFont    = "xft:FiraCode-16"
 
 
@@ -317,6 +317,7 @@ myTreeNavigation = M.fromList
 ---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
+              , NS "bluetooth" "blueman-manager" (className =? ".blueman-manager-wrapped") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
@@ -425,8 +426,8 @@ myKeys' conf =
   subKeys "Launcher"
   ([  ("M-a j"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
     , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
-    , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
-   ] ++ zipWith(\k v -> ("M-d "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
+    , ("M-p"            , addName "launch application application menu"        $ spawn myMenu)
+   ] ++ zipWith(\k v -> ("M-s "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   ) ^++^
 
   subKeys "media control"
@@ -446,8 +447,8 @@ myKeys' conf =
     wsKeys        = map show $ [1..9] ++ [0]
     modm          = mod4Mask
 
-    scratchpadNames   = ["spotify", "discord"]
-    scratchpadKeys    = ["j", "k", "l"]
+    scratchpadNames   = ["spotify", "bluetooth", "discord"]
+    scratchpadKeys    = ["s", "b", "d"]
 
     -- wrapper function to create a named keymap
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
