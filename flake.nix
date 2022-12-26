@@ -35,7 +35,6 @@
         name,
         users ? [ "bruno" ],
         isDesktop ? true,
-        extraPackages ? [],
         extraHomePackages ? []
       }@args:
       nixpkgs.lib.nixosSystem {
@@ -63,7 +62,7 @@
               };
             }) users);
           }
-        ] ++ extraPackages;
+        ];
       };
 
     in {
