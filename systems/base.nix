@@ -8,7 +8,6 @@
     ] ++ lib.optionals isDesktop [
     ];
 
-
   # Bootloader
   boot.loader = {
     efi = {

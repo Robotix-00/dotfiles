@@ -1,4 +1,4 @@
-{ config, grub-themes, ... }:
+{ config, hardware, grub-themes, ... }:
 {
   imports =
     [
@@ -10,6 +10,9 @@
       ./../modules/hardware/wifi/rtl8812au.nix
 
       ./../packages/vscode
+
+      hardware.common-cpu-intel
+      hardware.common-gpu-nvidia-nonprime
     ];
 
   # adding windows dual boot

@@ -3,17 +3,15 @@
 
   inputs = {
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
-
     nixpkgs_stable.url = github:nixos/nixpkgs/nixos-22.11;
-
     nixos-hardware.url = github:nixos/nixos-hardware/master;
-
-    grubtheme.url = github:vinceliuice/grub2-themes/master;
 
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    grubtheme.url = github:vinceliuice/grub2-themes/master;
   };
 
   outputs = {self, nixpkgs, nixpkgs_stable, home-manager, nixos-hardware, grubtheme}:
@@ -33,43 +31,49 @@
         config = pkgConfig;
       };
 
-      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}:
+      mkMaschine = {
+        name,
+        users ? [ "bruno" ],
+        isDesktop ? true,
+        extraPackages ? [],
+        extraHomePackages ? []
+      }@args:
       nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {
-          inherit self stable isDesktop;
+          inherit self pkgs stable isDesktop;
+          hardware = nixos-hardware.nixosModules;
         };
 
         modules = [
-          config
+          ./systems/${name}.nix
           grubtheme.nixosModule
 
+          # set host name
+          { networking.hostName = name; }
+
+          # load home configuration for each specified user
           home-manager.nixosModules.home-manager {
-            home-manager.users.bruno = {
-              imports = [ ./users/bruno/home.nix ] ++ extraHomePackages;
-            };
+            # i highly doubt that i'll add any more users but i spent an hour
+            # to configure this so it'll stay
+            home-manager.users = builtins.listToAttrs (map (user: { name = user; value = {
+                imports = [./users/${user}/home.nix] ++ extraHomePackages;
+              };
+            }) users);
           }
         ] ++ extraPackages;
       };
 
     in {
       nixosConfigurations = {
-        LLOYD = mkComputer {
-          config = ./systems/LLOYD.nix;
+        LLOYD = mkMaschine {
+          name = "LLOYD";
           isDesktop = true;
-          extraPackages = [
-            nixos-hardware.nixosModules.common-cpu-intel
-            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-          ];
         };
 
-        Yami = mkComputer {
-          config = ./systems/Yami.nix;
-          extraPackages = [
-            # actually e15
-            nixos-hardware.nixosModules.lenovo-thinkpad-e14-intel
-          ];
+        Yami = mkMaschine {
+          name = "Yami";
           isDesktop = true;
         };
       };

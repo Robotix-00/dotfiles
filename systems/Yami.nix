@@ -1,12 +1,11 @@
-{config, lib, pkgs, ... }:
+{config, lib, pkgs, hardware, ... }:
 
 {
   imports =
     [
       ./base.nix
+      hardware.lenovo-thinkpad-e14-intel
     ];
-
-  networking.hostName = "Yami"; # Define your hostname.
 
   boot.supportedFilesystems = [ "ntfs" ];
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
