@@ -2,8 +2,6 @@
 {
   imports =
     [
-      ./base.nix
-
       ./../modules/hardware/corsair.nix
 
       ./../modules/hardware/wifi/rtl8821au.nix

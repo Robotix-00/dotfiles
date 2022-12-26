@@ -47,6 +47,7 @@
         };
 
         modules = [
+          ./systems/base.nix
           ./systems/${name}.nix
           grubtheme.nixosModule
 

@@ -3,7 +3,7 @@
 {
   imports =
     [
-      ./base.nix
+      ./../modules/hardware/wifi/rtl8821au.nix
       hardware.lenovo-thinkpad-e14-intel
     ];
 
