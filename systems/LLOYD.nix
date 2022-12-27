@@ -7,9 +7,13 @@
 
       ./../packages/vscode
 
-      hardware.common-cpu-intel
-      hardware.common-gpu-nvidia-nonprime
-    ];
+    ] ++ (with hardware; [
+      common-cpu-intel
+      common-gpu-nvidia-nonprime
+      common-pc
+      common-pc-hdd
+      common-pc-ssd
+    ]);
 
   # adding windows dual boot
   boot.loader.grub.extraEntries = ''
