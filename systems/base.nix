@@ -21,11 +21,6 @@
       efiSupport = true;
       version = 2;
     };
-
-    grub2-theme = {
-      theme = "vimix";
-      icon = "color";
-    };
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";

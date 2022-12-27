@@ -48,7 +48,14 @@
         modules = [
           ./systems/base.nix
           ./systems/${name}.nix
+
           grubtheme.nixosModule
+          {
+             boot.loader.grub2-theme = {
+               theme = "vimix";
+               icon = "color";
+             };
+          }
 
           # set host name
           { networking.hostName = name; }
