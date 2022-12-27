@@ -1,7 +1,7 @@
 { pkgs, lib, isDesktop, ... }:
 {
   imports = [
-    ./mountpoints.nix
+ #   ./mountpoints.nix
 
     ./network
     ./virtualisation
@@ -10,7 +10,6 @@
     ./../assets
 
     ./gpg.nix
-    ./ssh.nix
 
   ] ++ lib.optionals isDesktop [
     ./audio.nix

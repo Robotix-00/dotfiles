@@ -30,7 +30,6 @@
     iw
 
     # file management
-    vim
     git
     git-secret
 
@@ -39,11 +38,8 @@
     wget
     tree
     bat
-    ranger
-    odt2txt pandoc ueberzug poppler_utils # ranger util
 
     ripgrep
-    stable.peco
 
     # processes
     htop
@@ -72,7 +68,6 @@
     evince            # pdf viewer
     thunderbird       # email client
     joplin-desktop    # note-taking software
-    languagetool
 
     # images
     feh         # image viewer
@@ -83,7 +78,7 @@
 
     # GUI tools
     firefox
-    stable.brave
+    brave
 
     discord
     spotify

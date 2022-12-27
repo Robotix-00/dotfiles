@@ -1,18 +1,20 @@
 {
-  description = "Meine absolut sicke Systemkonfiguration";
+  description = "my sick system configuration(s)";
 
   inputs = {
     nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
-
     nixpkgs_stable.url = github:nixos/nixpkgs/nixos-22.11;
+    nixos-hardware.url = github:nixos/nixos-hardware/master;
 
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    grubtheme.url = github:vinceliuice/grub2-themes/master;
   };
 
-  outputs = {self, nixpkgs, nixpkgs_stable, home-manager}:
+  outputs = {self, nixpkgs, nixpkgs_stable, home-manager, nixos-hardware, grubtheme}:
     let
       system = "x86_64-linux";
       pkgConfig = {
@@ -29,36 +31,56 @@
         config = pkgConfig;
       };
 
-      mkComputer = {config, extraPackages ? [], extraHomePackages ? [], isDesktop ? true, ...}:
+      mkMaschine = {
+        name,
+        users ? [ "bruno" ],
+        isDesktop ? true,
+        extraHomePackages ? []
+      }@args:
       nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {
-          inherit self stable isDesktop;
-          grub-themes = pkgs.callPackage ./modules/grub_themes.nix {};
+          inherit self pkgs stable isDesktop;
+          hardware = nixos-hardware.nixosModules;
         };
 
         modules = [
-          config
+          ./systems/base.nix
+          ./systems/${name}.nix
 
-          home-manager.nixosModules.home-manager {
-            home-manager.users.bruno = {
-              imports = [ ./users/bruno/home.nix ] ++ extraHomePackages;
-            };
+          grubtheme.nixosModule
+          {
+             boot.loader.grub2-theme = {
+               theme = "vimix";
+               icon = "color";
+             };
           }
-        ] ++ extraPackages;
+
+          # set host name
+          { networking.hostName = name; }
+
+          # load home configuration for each specified user
+          home-manager.nixosModules.home-manager {
+            # i highly doubt that i'll add any more users but i spent an hour
+            # to configure this so it'll stay
+            home-manager.users = builtins.listToAttrs (map (user: { name = user; value = {
+                imports = [./users/${user}/home.nix] ++ extraHomePackages;
+              };
+            }) users);
+          }
+        ];
       };
 
     in {
       nixosConfigurations = {
-        # basic image
-        base = mkComputer {
-          config = ./systems/base.nix;
+        LLOYD = mkMaschine {
+          name = "LLOYD";
           isDesktop = true;
         };
 
-        LLOYD = mkComputer {
-          config = ./systems/LLOYD.nix;
+        Yami = mkMaschine {
+          name = "Yami";
           isDesktop = true;
         };
       };

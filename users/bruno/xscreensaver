@@ -1,0 +1,24 @@
+timeout:	0:20:00
+lock:		True
+lockTimeout:	0:10:00
+passwdTimeout:	0:00:30
+installColormap:    True
+nice:		10
+fade:		False
+unfade:		False
+fadeSeconds:	0:00:03
+ignoreUninstalledPrograms:False
+font:		*-medium-r-*-140-*-m-*
+dpmsEnabled:	False
+
+mode:		one
+selected:	0
+
+dialogTheme:	greenblack
+
+programs:\
+				glmatrix -root
+
+pointerHysteresis:  10
+authWarningSlack:   20
+

@@ -1,16 +1,5 @@
 { pkgs, stable, lib, ... }:
 let
-  # nixpks version doesn't work, use manual
-  # vim-better-whitespace = pkgs.vimUtils.buildVimPlugin {
-  #   name = "vim-better-whitespace";
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "ntpeters";
-  #     repo = "vim-better-whitespace";
-  #     rev = "1b22dc57a2751c7afbc6025a7da39b7c22db635d";
-  #     sha256 = "10l01a8xaivz6n01x6hzfx7gd0igd0wcf9ril0sllqzbq7yx2bbk";
-  #   };
-  # };
-
   vim-hexedit = pkgs.vimUtils.buildVimPlugin {
     name = "vim-hexedit";
     src = pkgs.fetchFromGitHub {
@@ -21,27 +10,16 @@ let
     };
   };
 
-  vimbegood = pkgs.vimUtils.buildVimPlugin {
-    name = "vimbegood";
-    src = pkgs.fetchFromGitHub {
-      owner = "ThePrimeagen";
-      repo = "vim-be-good";
-      rev = "c290810728a4f75e334b07dc0f3a4cdea908d351";
-      sha256 = "sha256-lJNY/5dONZLkxSEegrwtZ6PHYsgMD3nZkbxm6fFq3vY=";
-    };
-  };
-
   myConfig = pkgs.vimUtils.buildVimPlugin {
     name = "my-config";
     src = ./nvim;
   };
 in
 {
-  environment.variables = { EDITOR = "vim"; };
-
   programs.neovim = {
     enable = true;
     vimAlias = true;
+    viAlias = true;
 
     defaultEditor = true;
 
@@ -52,23 +30,24 @@ in
 
       packages.myVimPackage = with pkgs.vimPlugins; {
         start = [
-          myConfig          # TODO
-          nerdtree          # file navigation
+          myConfig
+          harpoon           # project file management
           telescope-nvim    # file fuzzy finding
+          vim-tmux-navigator# vim-tmux navigation integration
+
           vim-commentary    # comment shortcuts
           indentLine        # shows lines for indent scopes
           vim-visual-multi  # multi line edits
-          vim-tmux-navigator
-          vim-surround      # surround word with characters #TODO
+          vim-surround      # surround word with characters
+          vim-better-whitespace   # shows tailing whitespaces
           # vim-better-whitespace #BROKEN shows tailing whitespaces
 
-          nvim-treesitter
-          nvim-treesitter-context
-
-          vimbegood
 
           # code completion
+          nvim-treesitter
+          nvim-treesitter-context
           nvim-cmp
+
           cmp-buffer
           cmp-path
           cmp-nvim-lsp
@@ -78,10 +57,10 @@ in
           lspkind-nvim
 
           # lsp
-          nvim-lspconfig    # TODO
+          nvim-lspconfig    # WIP
 
           # formatting & linting
-          # null-ls-nvim    # TODO
+          null-ls-nvim      # WIP
           syntastic         # syntax highlighting
 
           # git integration
@@ -89,16 +68,12 @@ in
           vim-fugitive
 
           # language specific
-          vim-nix           # nix support
-          vim-polyglot      # multilingual support
+          vim-nix               # nix support
           markdown-preview-nvim # markdown previewer
 
           # visual
-          vim-devicons      # icons for nerdtree
           lightline-vim     # status bar
-          gruvbox-nvim      # theme
-        ] ++ [
-          # vim-better-whitespace   # shows tailing whitespaces
+          rose-pine         # theme
         ];
 
         opt = [
@@ -111,7 +86,6 @@ in
     # lsp servers
     pylint
     rnix-lsp
-    
     haskell-language-server
 
     cargo

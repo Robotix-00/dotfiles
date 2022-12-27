@@ -1,4 +1,4 @@
-{ pkgs, ... }: 
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     (vscode-with-extensions.override {
@@ -14,6 +14,12 @@
         #   version = "0.47.2";
         #   sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
         # }
+        {
+          name = "Solarized";
+          publisher = "ryanolsonx";
+          version = "2.1.0";
+          sha256 = "sha256-HfXNMuUtrqgidSrzFFqeWJhZPQaxP8aw6aYXcT/Exlc=";
+        }
       ];
     })
   ];

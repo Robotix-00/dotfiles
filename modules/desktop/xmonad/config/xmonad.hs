@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
-
+--                                                                    --
 --              \ \/ /  \/  | ___  _ __   __ _  __| |                 --
 --               \  /| |\/| |/ _ \| '_ \ / _` |/ _` |                 --
 --               /  \| |  | | (_) | | | | (_| | (_| |                 --
@@ -74,7 +74,7 @@ import qualified XMonad.StackSet as W
 myTerminal  = "kitty"
 myBrowser = "firefox"
 myStatusbar = "xmobar -x0 $HOME/.config/xmonad/xmobar/xmobar.hs"
-myMenu    = "dmenu_run"
+myMenu    = "ulauncher"
 myFont    = "xft:FiraCode-16"
 
 
@@ -87,7 +87,6 @@ myApplications =
   , ("VS Code", "code", "light weight code editor")
   , ("Firefox", "firefox", "nice browser")
   , ("Brave", "brave", "privacy browser")
-  , ("", "", "")
   , ("Thunderbird", "thunderbird", "graphical email client")
   , ("Evince", "evince", "pdf viewer")
   , ("VLC-Player", "vlc", "media player")
@@ -238,13 +237,15 @@ projects = [ Project { projectName  = wsGEN
 ---statusbar---------------------------------------------------------{{{
 mySB = statusBarProp myStatusbar (pure myPP)
 
-myPP = def
+myPP = filterOutWsPP [ "NSP" ] def
         { ppCurrent             = xmobarColor color_active "" . wrap "[" "]"
-        , ppTitle               = xmobarColor color_active "" . shorten 30
         , ppVisible             = xmobarColor color_base3  "" . wrap "(" ")"
-        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap " " " "    --TODO
-        , ppWsSep               = " "
+        , ppHidden              = xmobarColor color_base3  "" . wrap "{" "}"
+        , ppUrgent              = xmobarColor "#FF0000"    "" . wrap "!" "!"    --TODO
+        , ppTitle               = xmobarColor color_active "" . shorten 30
         , ppLayout              = xmobarColor "#00FFFF" ""
+        , ppTitleSanitize       = xmobarStrip
+        , ppWsSep               = " "
         , ppOrder               = id
         }
 ---------------------------------------------------------------------}}}
@@ -334,12 +335,13 @@ myTreeNavigation = M.fromList
 ---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
+              , NS "bluetooth" "blueman-manager" (className =? ".blueman-manager-wrapped") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
 ---layouts-----------------------------------------------------------{{{
 myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
-  (main ||| full)
+  (main ||| Full)
   where
     named n        = renamed [XMonad.Layout.Renamed.Replace n]
 
@@ -365,9 +367,6 @@ myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
     --     tabbs $ sublayouts $
     --       mySpacing $
     --         Tall 1 (3/100) (1/2)
-
-    full = named "Full" $
-      Full
 
 ---------------------------------------------------------------------}}}
 ---hooks-------------------------------------------------------------{{{
@@ -395,32 +394,11 @@ myManageHook = manageAll <+> namedScratchpadManageHook scratchpads
 
 ---------------------------------------------------------------------}}}
 ---keybindings-------------------------------------------------------{{{
-myKeys' conf = let
-  dirKeys   = ["j", "k", "h", "l"]
-  arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
-  dirs      = [ D, U, L, R ]
-
-  screenKeys    = ["w", "e", "r"]
-  wsKeys        = map show $ [1..9] ++ [0]
-  modm          = mod4Mask
-
-  scratchpadNames   = ["spotify", "discord"]
-  scratchpadKeys    = ["j", "k", "l"]
-
-
-  subKeys str ks = subtitle str : mkNamedKeymap conf ks
-
-  zipM  m nm ks as f = zipWith(\k v -> (m++k, addName nm $ f v)) ks as
-  zipDir m nm f = zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f
-
-  zipM'  m nm ks as f b = zipWith(\k v -> (m++k, addName nm $ f v b)) ks as
-  zipDir' m nm f b = zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b
-
-  in
+myKeys' conf =
   subKeys "System"
   [ ("M-q"            , addName "Restart XMonad"      $ spawn "xmonad --recompile; xmonad --restart")
   , ("M-C-q"          , addName "Quits XMonad"        $ io exitSuccess)
-  , ("M-S-q"          , addName "Locks Screen"        $ spawn "xscreensaver-command -lock")
+  , ("M-S-q"          , addName "Locks Screen"        $ spawn "xdg-screensaver lock")
   ] ^++^
 
   subKeys "Layout"
@@ -434,6 +412,7 @@ myKeys' conf = let
   subKeys "Actions"
   [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
   , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
+  , ("<Print>"      , addName "open screenshot menu"  $ spawn "flameshot gui")
   , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
@@ -446,11 +425,11 @@ myKeys' conf = let
    , ("M-z"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipDir'   "M-S-"      "swap w"            windowSwap False
-    ++ zipDir'   "M-"        "focus w"           windowGo False
+    ++ zipM     "M-S-"       "move w to ws"  wsKeys [0..] (withNthWorkspace W.shift)
+    ++ zipDir'  "M-S-"       "swap w"            windowSwap False
+    ++ zipDir'  "M-"         "focus w"           windowGo False
 
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
-    ++ zipWith(\k v -> ("M-S-"++k, addName "focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.shift)))) screenKeys [0..]
   )^++^
 
   subKeys "Sub Layouts"
@@ -466,8 +445,8 @@ myKeys' conf = let
   subKeys "Launcher"
   ([  ("M-a j"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
     , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
-    , ("M-p"            , addName "launch dmenu"        $ spawn myMenu)
-   ] ++ zipWith(\k v -> ("M-d "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
+    , ("M-p"            , addName "launch application application menu"        $ spawn myMenu)
+   ] ++ zipWith(\k v -> ("M-s "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   ) ^++^
 
   subKeys "media control"
@@ -478,6 +457,28 @@ myKeys' conf = let
   , ("<XF86AudioNext>", addName "next song" $ spawn "playerctl next")
   , ("<XF86AudioPrev>", addName "prev song" $ spawn "playerctl previous")
   ]
+  where
+    dirKeys   = ["j", "k", "h", "l"]
+    arrowKeys = ["<D>", "<U>", "<L>", "<R>"]
+    dirs      = [ D, U, L, R ]
+
+    screenKeys    = ["w", "e", "r"]
+    wsKeys        = map show $ [1..9] ++ [0]
+    modm          = mod4Mask
+
+    scratchpadNames   = ["spotify", "bluetooth", "discord"]
+    scratchpadKeys    = ["s", "b", "d"]
+
+    -- wrapper function to create a named keymap
+    subKeys str ks = subtitle str : mkNamedKeymap conf ks
+
+    -- funcion applying action/direction keys to each input
+    zipM  m nm ks as f = zipWith(\k v -> (m++k, addName nm $ f v)) ks as
+    zipDir m nm f = zipM m nm dirKeys dirs f ++ zipM m nm arrowKeys dirs f
+
+    zipM'  m nm ks as f b = zipWith(\k v -> (m++k, addName nm $ f v b)) ks as
+    zipDir' m nm f b = zipM' m nm dirKeys dirs f b ++ zipM' m nm arrowKeys dirs f b
+
 
 ---Mouse bindings----------------------------------------------------{{{
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $

@@ -1,4 +1,4 @@
-{ pkgs, config, lib, self, isDesktop, grub-themes, ... }:
+{ pkgs, config, lib, isDesktop, ... }:
 {
   imports =
     [
@@ -20,15 +20,11 @@
       devices = [ "nodev" ];
       efiSupport = true;
       version = 2;
-
-      extraConfig = ''
-        set theme=${grub-themes.cyberpunk}
-      '';
     };
   };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-  # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
 
   system.stateVersion = "22.11";
 }

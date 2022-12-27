@@ -1,15 +1,16 @@
-{ config, grub-themes, ... }:
+{ config, hardware, grub-themes, ... }:
 {
   imports =
     [
-      ./base.nix
-
       ./../modules/hardware/corsair.nix
 
       ./../modules/hardware/wifi/rtl8821au.nix
       ./../modules/hardware/wifi/rtl8812au.nix
 
       ./../packages/vscode
+
+      hardware.common-cpu-intel
+      hardware.common-gpu-nvidia-nonprime
     ];
 
   # adding windows dual boot
@@ -31,16 +32,23 @@
   # define hostname
   networking.hostName = "LLOYD";
 
-  # video drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-
   # hardware stuff
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.kernelModules = [ "kvm-intel" ];
 
-
   # device specific mount-points
+  fileSystems."/" =
+      { device = "/dev/disk/by-label/nixos";
+        fsType = "ext4";
+      };
+
+  fileSystems."/nix/store" =
+    { device = "/nix/store";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
+  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/293A-451F";
       fsType = "vfat";

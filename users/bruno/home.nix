@@ -20,6 +20,7 @@ in
       # ".config/ranger/".source = ./../../packages/ranger/config;   # set to manual, doesnt work because confdir has to be writable
       ".config/kitty/".source = ./../../packages/kitty/config;
       ".tmux.conf".source = ./../../packages/tmux/tmux.conf;
+      ".xscreensaver".source = ./xscreensaver;
 
       # cursor
       ".icons/default".source = "${nordzyCursors}/Nordzy-cursors";
@@ -28,11 +29,6 @@ in
 
   programs = {
     home-manager.enable = true;
-
-    # stupid that i have to do this in home manager
-    neovim.plugins = [
-      pkgs.nvim-treesitter.withAllGrammars
-    ];
 
     git = {
       enable = true;
