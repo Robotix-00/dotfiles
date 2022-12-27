@@ -6,6 +6,7 @@
     ] ++ lib.optionals isDesktop [
     ];
 
+  services.tlp.enable = true;
   boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader
