@@ -216,19 +216,16 @@ myTreeSpaces = [ Node wsGEN []
                ]
 
 projects :: [Project]
-projects = [ Project { projectName  = wsGEN
-  , projectDirectory = "~/"
-  , projectStartHook = Nothing
-                     }
-  , Project { projectName  = wsDEV
-  , projectDirectory = "~/"
-  , projectStartHook = Just $ do spawnOn wsDEV myTerminal
-            }
-  , Project { projectName  = wsWEB
-  , projectDirectory = "~/"
-  , projectStartHook = Just $ do spawnOn wsWEB myBrowser
-                                 }
-           ]
+projects =
+    [ Project { projectName  = wsDEV
+              , projectDirectory = "~/"
+              , projectStartHook = Just $ do spawnOn wsDEV myTerminal
+              }
+    , Project { projectName  = wsWEB
+              , projectDirectory = "~/"
+              , projectStartHook = Just $ do spawnOn wsWEB myBrowser
+              }
+    ]
 ---------------------------------------------------------------------}}}
 ---interface---------------------------------------------------------{{{
 ---statusbar---------------------------------------------------------{{{
