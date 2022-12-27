@@ -10,7 +10,7 @@
     ./../assets
 
     ./gpg.nix
-
+    ./hardware/printing.nix
   ] ++ lib.optionals isDesktop [
     ./audio.nix
     ./desktop

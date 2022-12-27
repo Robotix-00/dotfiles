@@ -3,10 +3,10 @@
   imports =
     [
       ./../modules
-
-      ./../modules/hardware/printing.nix
     ] ++ lib.optionals isDesktop [
     ];
+
+  boot.supportedFilesystems = [ "ntfs" ];
 
   # Bootloader
   boot.loader = {

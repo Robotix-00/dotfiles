@@ -2,13 +2,14 @@
 
 ## Fixes
 - [ ] screens messed up after hibernation
-- [ ] fonts of treeselect messed up after reboot
+- [ ] fonts of treeselect messed up after reboot (only with vertical monitor
+  setup)
 
 ## Tasks
 - [ ] Write a proper README
     - [ ] images of desktop
     - [ ] setup instructions
-- [ ] vim
+- [~] vim
     - [ ] lsp config
 - [x] make assets a nix module (so the system doeasnt rely on the config beeing somewhere other then the store)
 - [ ] xmonad add multiple level of application tree select

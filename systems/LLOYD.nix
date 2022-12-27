@@ -2,8 +2,6 @@
 {
   imports =
     [
-      ./../modules/hardware/corsair.nix
-
       ./../modules/hardware/wifi/rtl8821au.nix
       ./../modules/hardware/wifi/rtl8812au.nix
 
@@ -14,7 +12,6 @@
     ];
 
   # adding windows dual boot
-  boot.supportedFilesystems = [ "ntfs" ];
   boot.loader.grub.extraEntries = ''
         menuentry 'Windows' --class windows --class os $menuentry_id_option 'osprober-efi-293A-451F' {
                 insmod part_gpt
@@ -29,12 +26,20 @@
         }
       '';
 
-  # define hostname
-  networking.hostName = "LLOYD";
-
   # hardware stuff
+  hardware.ckb-next = {
+    enable = true;
+    gid = 100;
+  };
+
+  hardware.logitech.wireless = {
+    enable = true;
+    enableGraphical = true;
+  };
+
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.kernelModules = [ "kvm-intel" ];
+
 
   # device specific mount-points
   fileSystems."/" =
