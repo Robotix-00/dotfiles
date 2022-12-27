@@ -7,11 +7,7 @@
       hardware.lenovo-thinkpad-e14-intel
     ];
 
-  boot.supportedFilesystems = [ "ntfs" ];
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
-  boot.extraModulePackages = [ ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/83ee16bd-d31b-4003-938a-f2b84ac04695";
