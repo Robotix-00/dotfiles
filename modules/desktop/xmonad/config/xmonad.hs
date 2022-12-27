@@ -205,18 +205,15 @@ myTreeSpaces :: Forest String
 myTreeSpaces = [ Node wsGEN []
                , Node wsWEB []
                , Node wsDEV
-                 [ Node "Browser" []
-                 ]
+                 -- [ Node "Browser" []
+                 -- ]
                , Node "four" []
                , Node "five" []
                , Node "six" []
                , Node "seven" []
                , Node "eight" []
                , Node "nine" []
-               , Node "NSP" []
                ]
-
--- myWorkspaces = [ wsGEN, wsWEB, wsDEV, "four", "five", "six", "seven", "eight", "nine", "zero"]
 
 projects :: [Project]
 projects = [ Project { projectName  = wsGEN
