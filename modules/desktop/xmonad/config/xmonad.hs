@@ -11,11 +11,8 @@
 -- https://github.com/Robotix-00                                      --
 ------------------------------------------------------------------------
 ---TODOs-------------------------------------------------------------{{{
--- [~] - add more and better layouts
--- [~] - add usefull scratchpads
 -- [ ] - add colorizer to gridselect
--- [ ] - Add resize to windows
--- [ ] - add more colors?
+-- [ ] - Add resize keybind to windows
 -- [~] - add filter function to application (not sure if possible)
 ---------------------------------------------------------------------}}}
 ---modules-----------------------------------------------------------{{{
@@ -204,7 +201,7 @@ wsENT = "media"
 myTreeSpaces :: Forest String
 myTreeSpaces = [ Node wsGEN []
                , Node wsWEB []
-               , Node wsDEV
+               , Node wsDEV []
                  -- [ Node "Browser" []
                  -- ]
                , Node "four" []
@@ -294,9 +291,11 @@ treeselectAction a = TS.treeselectAction a
 
 
 tsDefaultConfig :: TS.TSConfig a
-tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
-  , TS.ts_background   = 0xdd1b2b34
+tsDefaultConfig = TS.TSConfig
+  { TS.ts_hidechildren = True
   , TS.ts_font         = myFont
+  , TS.ts_navigate     = myTreeNavigation
+  , TS.ts_background   = 0xdd1b2b34
   , TS.ts_node         = (0xFF237f94, 0xFF1e5c6c)
   , TS.ts_nodealt      = (0xFF237f94, 0xFF133b45)
   , TS.ts_highlight    = (0xffffffff, 0xFF268bd2)
@@ -304,10 +303,9 @@ tsDefaultConfig = TS.TSConfig { TS.ts_hidechildren = True
   , TS.ts_node_width   = 200
   , TS.ts_node_height  = 30
   , TS.ts_originX      = 20
-  , TS.ts_originY      = 20
+  , TS.ts_originY      = 50
   , TS.ts_indent       = 80
-  , TS.ts_navigate     = myTreeNavigation
-                              }
+  }
 
 
 myTreeNavigation = M.fromList
