@@ -9,6 +9,10 @@
   services.tlp.enable = true;
   boot.supportedFilesystems = [ "ntfs" ];
 
+  services.logind.extraConfig = ''
+    HandlePowerKey=hibernate
+  '';
+
   # Bootloader
   boot.loader = {
     efi = {
