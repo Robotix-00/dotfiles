@@ -400,21 +400,21 @@ myKeys' conf =
   , ("M-C--"          , addName "decrease master count" $ sendMessage (IncMasterN (-1)))
   ] ^++^
 
-
   subKeys "Actions"
-  [ ("M-S-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
+  [ ("M-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
   , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
-  , ("<Print>"      , addName "open screenshot menu"  $ spawn "flameshot gui")
+  , ("<Print>"        , addName "open screenshot menu"$ spawn "flameshot gui")
+  , ("M-p"            , addName "open screenshot menu"$ spawn "flameshot gui")
   , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
   subKeys "Navigation"
   ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
    , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-   , ("M-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+   , ("M-S-<Return>"     , addName "swap master"         $ windows W.swapMaster)
    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
-   , ("M-z"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
+   , ("M-d"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM     "M-S-"       "move w to ws"  wsKeys [0..] (withNthWorkspace W.shift)
@@ -435,9 +435,9 @@ myKeys' conf =
   ) ^++^
 
   subKeys "Launcher"
-  ([  ("M-a j"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
-    , ("M-a k"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
-    , ("M-p"            , addName "launch application application menu"        $ spawn myMenu)
+  ([  ("M-a"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
+    , ("M-y"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
+    , ("M-r"            , addName "launch application application menu"        $ spawn myMenu)
    ] ++ zipWith(\k v -> ("M-s "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   ) ^++^
 
