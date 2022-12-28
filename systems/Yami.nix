@@ -4,6 +4,8 @@
   imports =
     [
       ./../modules/hardware/wifi/rtl8821au.nix
+      ./../modules/hardware/tello.nix
+
       hardware.lenovo-thinkpad-e14-intel
     ];
 

@@ -2,8 +2,7 @@
 {
   imports =
     [
-      ./../modules/hardware/wifi/rtl8821au.nix
-      ./../modules/hardware/wifi/rtl8812au.nix
+      ./../modules/hardware/tello.nix
 
       ./../packages/vscode
 
