@@ -448,6 +448,8 @@ myKeys' conf =
   , ("<XF86AudioPlay>", addName "play audio" $ spawn "playerctl play-pause")
   , ("<XF86AudioNext>", addName "next song" $ spawn "playerctl next")
   , ("<XF86AudioPrev>", addName "prev song" $ spawn "playerctl previous")
+  , ("<XF86MonBrightnessUp>", addName "increase brightness" $ spawn "light -A 10")
+  , ("<XF86MonBrightnessDown>", addName "lower brightness" $ spawn "light -U 10")
   ]
   where
     dirKeys   = ["j", "k", "h", "l"]

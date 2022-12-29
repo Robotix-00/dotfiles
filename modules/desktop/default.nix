@@ -3,6 +3,7 @@
   imports = [
     ./fonts.nix
     ./xmonad
+    ./backlight.nix
   ];
 
   hardware.opengl.enable = true;
