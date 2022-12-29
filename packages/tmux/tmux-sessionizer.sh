@@ -15,9 +15,9 @@ tmux_running=$(pgrep tmux)
 
 if ! tmux has-session -t=$selected_name 2> /dev/null; then
     tmux new-session -ds $selected_name -c $selected
+    tmux set -t$selected_name set-titles-string "Project $selected_name"
 fi
 
-tmux set -t$selected_name set-titles-string "Project $selected_name"
 
 if [[ -z $TMUX ]]; then
     tmux attach -t $selected_name
