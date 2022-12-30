@@ -327,7 +327,7 @@ myTreeNavigation = M.fromList
 ---scratchpads-------------------------------------------------------{{{
 scratchpads = [ NS "spotify" "spotify" (className =? "Spotify") defaultFloating
               , NS "discord" "discord" (className =? "discord") defaultFloating
-              , NS "bluetooth" "blueman-manager" (className =? ".blueman-manager-wrapped") defaultFloating
+              , NS "bluetooth" "blueberry" (className =? "Blueberry.py") defaultFloating
               ]
 ---------------------------------------------------------------------}}}
 ---------------------------------------------------------------------}}}
