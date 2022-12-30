@@ -9,6 +9,10 @@
       hardware.lenovo-thinkpad-e14-intel
     ];
 
+  # adding vm support
+  # virtualisation.libvirtd.enable = true;
+  # services.throttled.enable = lib.mkForce false; # very bad i think
+
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
 
   fileSystems."/" =
