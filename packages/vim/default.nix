@@ -5,7 +5,7 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "rootkiter";
       repo = "vim-hexedit";
-      rev = "174dd836d49b0bd785647f0730ad4f98ad101377";
+      rev = "refs/tags/v1.0.4";
       sha256 = "sha256-tniUeTt9odzHHFTIcPPbVstnQMBcHvWA1FMrr9vj/TA=";
     };
   };
@@ -40,27 +40,27 @@ in
           vim-visual-multi  # multi line edits
           vim-surround      # surround word with characters
           vim-better-whitespace   # shows tailing whitespaces
-          # vim-better-whitespace #BROKEN shows tailing whitespaces
 
 
           # code completion
           nvim-treesitter
-          nvim-treesitter-context
-          nvim-cmp
 
+          nvim-cmp
           cmp-buffer
           cmp-path
           cmp-nvim-lsp
-          luasnip
-          cmp_luasnip
-          friendly-snippets
-          lspkind-nvim
+          cmp-git
+
+          # luasnip
+          # cmp_luasnip
+          # friendly-snippets
+          # lspkind-nvim
 
           # lsp
           nvim-lspconfig    # WIP
 
           # formatting & linting
-          null-ls-nvim      # WIP
+          # null-ls-nvim      # WIP
           syntastic         # syntax highlighting
 
           # git integration
@@ -84,12 +84,8 @@ in
   };
   environment.systemPackages = with pkgs; [
     # lsp servers
-    pylint
+    python39Packages.python-lsp-server
     rnix-lsp
     haskell-language-server
-
-    cargo
-    rustc
-    rust-analyzer
   ];
 }
