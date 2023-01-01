@@ -7,6 +7,8 @@
 
     ./tmux
     ./ranger
+
+    ./lutris
   ];
 
   # Allow unfree packages
@@ -83,6 +85,4 @@
     discord
     spotify
   ];
-
-  hardware.opengl.driSupport32Bit = true;
 }
