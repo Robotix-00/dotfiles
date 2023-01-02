@@ -404,7 +404,6 @@ myKeys' conf =
   [ ("M-<Return>"   , addName "spawn terminal"      $ spawn (XMonad.terminal conf))
   , ("M-f"            , addName "spawns browser"      $ spawn myBrowser)
   , ("<Print>"        , addName "open screenshot menu"$ spawn "flameshot gui")
-  , ("M-p"            , addName "open screenshot menu"$ spawn "flameshot gui")
   , ("M-<Backspace>"  , addName "kill selected window"$ kill)
   ] ^++^
 
@@ -437,7 +436,7 @@ myKeys' conf =
   subKeys "Launcher"
   ([  ("M-a"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
     , ("M-y"          , addName "launch grid select"  $ spawnSelected' (remap' myApplications))
-    , ("M-r"            , addName "launch application application menu"        $ spawn myMenu)
+    , ("M-p"            , addName "launch application application menu"        $ spawn myMenu)
    ] ++ zipWith(\k v -> ("M-s "++k, addName ("Open scratchpad <"++v++">") $ namedScratchpadAction scratchpads v)) scratchpadKeys scratchpadNames
   ) ^++^
 
