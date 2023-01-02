@@ -75,9 +75,9 @@ handle_extension() {
         #     exit 1;;
 
         ## BitTorrent
-        torrent)
-            transmission-show -- "${FILE_PATH}" && exit 5
-            exit 1;;
+        # torrent)
+        #     transmission-show -- "${FILE_PATH}" && exit 5
+        #     exit 1;;
 
         ## OpenDocument
         odt|ods|odp|sxw)
@@ -88,11 +88,11 @@ handle_extension() {
             exit 1;;
 
         ## XLSX
-        xlsx)
-            ## Preview as csv conversion
-            ## Uses: https://github.com/dilshod/xlsx2csv
-            xlsx2csv -- "${FILE_PATH}" && exit 5
-            exit 1;;
+        # xlsx)
+        #     ## Preview as csv conversion
+        #     ## Uses: https://github.com/dilshod/xlsx2csv
+        #     xlsx2csv -- "${FILE_PATH}" && exit 5
+        #     exit 1;;
 
         ## HTML
         htm|html|xhtml)
@@ -103,15 +103,15 @@ handle_extension() {
         ## JSON
         json)
             jq --color-output . "${FILE_PATH}" && exit 5
-            python -m json.tool -- "${FILE_PATH}" && exit 5
+            # python -m json.tool -- "${FILE_PATH}" && exit 5
             ;;
 
         ## Direct Stream Digital/Transfer (DSDIFF) and wavpack aren't detected
         ## by file(1).
-        dff|dsf|wv|wvc)
-            mediainfo "${FILE_PATH}" && exit 5
-            exiftool "${FILE_PATH}" && exit 5
-            ;; # Continue with next handler on failure
+        # dff|dsf|wv|wvc)
+        #     mediainfo "${FILE_PATH}" && exit 5
+        #     exiftool "${FILE_PATH}" && exit 5
+        #     ;; # Continue with next handler on failure
     esac
 }
 
@@ -151,10 +151,10 @@ handle_image() {
             exit 7;;
 
         ## Video
-        # video/*)
-        #     # Thumbnail
-        #     ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
-        #     exit 1;;
+        video/*)
+            # Thumbnail
+            ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
+            exit 1;;
 
         ## PDF
         application/pdf)
@@ -273,10 +273,10 @@ handle_mime() {
         ## DOCX, ePub, FB2 (using markdown)
         ## You might want to remove "|epub" and/or "|fb2" below if you have
         ## uncommented other methods to preview those formats
-        *wordprocessingml.document|*/epub+zip|*/x-fictionbook+xml)
-            ## Preview as markdown conversion
-            pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
-            exit 1;;
+        # *wordprocessingml.document|*/epub+zip|*/x-fictionbook+xml)
+        #     ## Preview as markdown conversion
+        #     pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
+        #     exit 1;;
 
         ## XLS
         *ms-excel)
