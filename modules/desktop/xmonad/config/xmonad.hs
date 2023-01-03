@@ -410,7 +410,7 @@ myKeys' conf =
   subKeys "Navigation"
   ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
    , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-   , ("M-S-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+   , ("M-S-<Return>"   , addName "swap master"         $ windows W.swapMaster)
    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    , ("M-d"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)

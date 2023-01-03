@@ -16,7 +16,10 @@ in
     packages = [];
 
     file = {
-      ".config/xmonad/".source = ./../../modules/desktop/xmonad/config;   # set to manual, active development
+      ".config/xmonad/" = {
+        source = ./../../modules/desktop/xmonad/config;
+        # onChange = "xmonad --recompile; xmonad --restart"; # do not work
+      };
       # ".config/ranger/".source = ./../../packages/ranger/config;   # set to manual, doesnt work because confdir has to be writable
       ".config/kitty/".source = ./../../packages/kitty/config;
       ".tmux.conf".source = ./../../packages/tmux/tmux.conf;
