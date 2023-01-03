@@ -461,7 +461,7 @@ myKeys' conf =
     modm          = mod4Mask
 
     scratchpadNames   = ["spotify", "bluetooth", "discord"]
-    scratchpadKeys    = ["s", "b", "d"]
+    scratchpadKeys    = ["m", "b", "d"]
 
     -- wrapper function to create a named keymap
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
