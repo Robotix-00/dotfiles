@@ -44,8 +44,8 @@ in
 
 
           # code completion
-          nvim-treesitter
-          nvim-treesitter-context
+          # nvim-treesitter
+          # nvim-treesitter-context
           nvim-cmp
 
           cmp-buffer
