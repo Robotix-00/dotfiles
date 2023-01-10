@@ -423,15 +423,15 @@ myKeys' conf =
     ++ zipWith(\k v -> ("M-"++k, addName "switch focused screen" $ (screenWorkspace v >>= flip whenJust (windows . W.view)))) screenKeys [0..]
   )^++^
 
-  -- subKeys "Sub Layouts"
-  -- ([  ("M-s m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
-  --   , ("M-s u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
-  --   , ("M-s <Space>" , addName "switch sublayout"    $ toSubl NextLayout)
-  --   , ("M-,"         , addName "Focus up in sublayout"   $ onGroup W.focusUp')
-  --   , ("M-."         , addName "Focus down in sublayout" $ onGroup W.focusDown')
-  --  ]
-  --   ++ zipDir   "M-s "     "Merge w/sublayout"          (sendMessage . pullGroup)
-  -- ) ^++^
+  subKeys "Sub Layouts"
+  ([  ("M-m m"       , addName "merge all windows"   $ withFocused (sendMessage . MergeAll))
+    , ("M-m u"       , addName "seperate group"      $ withFocused (sendMessage . UnMerge))
+    , ("M-m <Space>" , addName "switch sublayout"    $ toSubl NextLayout)
+    , ("M-,"         , addName "Focus up in sublayout"   $ onGroup W.focusUp')
+    , ("M-."         , addName "Focus down in sublayout" $ onGroup W.focusDown')
+   ]
+    ++ zipDir   "M-m "     "Merge w/sublayout"          (sendMessage . pullGroup)
+  ) ^++^
 
   subKeys "Launcher"
   ([  ("M-a"          , addName "launch tree select"  $ treeselectAction tsDefaultConfig)
