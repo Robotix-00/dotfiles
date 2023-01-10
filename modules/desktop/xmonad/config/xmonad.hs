@@ -29,6 +29,7 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.Navigation2D
+import XMonad.Actions.FindEmptyWorkspace
 
 import XMonad.Config
 import XMonad.ManageHook
@@ -347,12 +348,10 @@ myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
             tabbs $
             subLayout [] (Simplest ||| Circle) $
             mySpacing $
-                ifWider 1080 big small
+                ifWider 1080 normal vertical
       where
-        big = ThreeColMid 1 (3/100) (1/2)
-        -- small = Mirror big
-
-        small = Mirror (GV.TallGrid 1 1 (1/2) 1 (3/100))
+        normal = ThreeColMid 1 (3/100) (1/2)
+        vertical = Mirror (GV.TallGrid 1 1 (1/2) 1 (3/100))
 
     -- tall = named "Tall" $
     --   addTopBar $
@@ -414,6 +413,8 @@ myKeys' conf =
    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    , ("M-d"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
+   , ("M-n"            , addName "open next empyt workspace" $ viewEmptyWorkspace)
+   , ("M-S-n"          , addName "move w to next empyt workspace" $ sendToEmptyWorkspace)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM     "M-S-"       "move w to ws"  wsKeys [0..] (withNthWorkspace W.shift)

@@ -10,8 +10,8 @@
     ];
 
   # adding vm support
-  # virtualisation.libvirtd.enable = true;
-  # services.throttled.enable = lib.mkForce false; # very bad i think
+  virtualisation.libvirtd.enable = true;
+  services.throttled.enable = lib.mkForce false; # very bad i think
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
 
