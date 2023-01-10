@@ -29,6 +29,7 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.Navigation2D
+import XMonad.Actions.FindEmptyWorkspace
 
 import XMonad.Config
 import XMonad.ManageHook
@@ -408,10 +409,12 @@ myKeys' conf =
   subKeys "Navigation"
   ([ ("M-<Tab>"        , addName "cycle windows"       $ BW.focusDown)
    , ("M-m"            , addName "return to master"    $ windows W.focusMaster)
-   , ("M-S-<Return>"     , addName "swap master"         $ windows W.swapMaster)
+   , ("M-S-<Return>"   , addName "swap master"         $ windows W.swapMaster)
    , ("M-t"            , addName "unfloats window"     $ withFocused $ windows . W.sink)
    , ("M-b"            , addName "Toggles top bar"     $ sendMessage ToggleStruts)
    , ("M-d"            , addName "workspace treeselect"$ TS.treeselectWorkspace tsDefaultConfig myTreeSpaces W.greedyView)
+   , ("M-n"            , addName "open next empyt workspace" $ viewEmptyWorkspace)
+   , ("M-S-n"          , addName "move w to next empyt workspace" $ sendToEmptyWorkspace)
    ]
     ++ zipM     "M-"         "switch to ws"  wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM     "M-S-"       "move w to ws"  wsKeys [0..] (withNthWorkspace W.shift)
