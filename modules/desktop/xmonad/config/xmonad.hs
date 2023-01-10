@@ -347,12 +347,10 @@ myLayout = avoidStruts $ windowNavigation $ BW.boringWindows
             tabbs $
             subLayout [] (Simplest ||| Circle) $
             mySpacing $
-                ifWider 1080 big small
+                ifWider 1080 normal vertical
       where
-        big = ThreeColMid 1 (3/100) (1/2)
-        -- small = Mirror big
-
-        small = Mirror (GV.TallGrid 1 1 (1/2) 1 (3/100))
+        normal = ThreeColMid 1 (3/100) (1/2)
+        vertical = Mirror (GV.TallGrid 1 1 (1/2) 1 (3/100))
 
     -- tall = named "Tall" $
     --   addTopBar $
